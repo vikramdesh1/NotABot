@@ -30,10 +30,7 @@ function postMessage(id) {
   if(id == 1) {
     botResponse = cool();
   } if(id == 2) {
-    insultgenerator(function(insult)
-    {
-      botResponse = insult;
-    })
+    botResponse = getInsult();
   }
 
   options = {
@@ -64,6 +61,15 @@ function postMessage(id) {
     console.log('timeout posting message '  + JSON.stringify(err));
   });
   botReq.end(JSON.stringify(body));
+}
+
+function getInsult() {
+  var ins;
+  insultgenerator(function(insult)
+  {
+    ins = insult;
+  });
+  return ins;
 }
 
 
