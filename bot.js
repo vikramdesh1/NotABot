@@ -17,7 +17,7 @@ function respond() {
     this.res.writeHead(200);
     insultgenerator(function(insult)
     {
-      postMessage(insult);
+      postMessage(insult + " -insultgenerator.org");
     });
     this.res.end();
   } else {
