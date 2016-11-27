@@ -11,11 +11,14 @@ function respond() {
 
   if(request.text && botRegex1.test(request.text)) {
     this.res.writeHead(200);
-    postMessage(1);
+    postMessage(cool());
     this.res.end();
   }else if(request.text && botRegex2.test(request.text)) {
     this.res.writeHead(200);
-    postMessage(2);
+    insultgenerator(function(insult)
+    {
+      postMessage(insult);
+    });
     this.res.end();
   } else {
     console.log("don't care");
@@ -24,14 +27,10 @@ function respond() {
   }
 }
 
-function postMessage(id) {
+function postMessage(message) {
   var botResponse, options, body, botReq;
 
-  if(id == 1) {
-    botResponse = cool();
-  } if(id == 2) {
-    botResponse = getInsult();
-  }
+  botResponse = message;
 
   options = {
     hostname: 'api.groupme.com',
@@ -62,15 +61,5 @@ function postMessage(id) {
   });
   botReq.end(JSON.stringify(body));
 }
-
-function getInsult() {
-  var ins;
-  insultgenerator(function(insult)
-  {
-    ins = insult;
-  });
-  return ins;
-}
-
 
 exports.respond = respond;
