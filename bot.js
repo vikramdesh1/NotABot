@@ -1,15 +1,21 @@
 var HTTPS = require('https');
 var cool = require('cool-ascii-faces');
+var insultgenerator = require('insultgenerator')
 
 var botID = process.env.BOT_ID;
 
 function respond() {
   var request = JSON.parse(this.req.chunks[0]),
-      botRegex1 = /\$coolguy/;
+  botRegex1 = /\$coolasciiface/;
+  botRegex2 = /\$insult/;
 
   if(request.text && botRegex1.test(request.text)) {
     this.res.writeHead(200);
     postMessage(1);
+    this.res.end();
+  }else if(request.text && botRegex2.test(request.text)) {
+    this.res.writeHead(200);
+    postMessage(2);
     this.res.end();
   } else {
     console.log("don't care");
@@ -23,6 +29,11 @@ function postMessage(id) {
 
   if(id == 1) {
     botResponse = cool();
+  } if(id == 2) {
+    insultgenerator(function(insult)
+    {
+      botResponse = insult;
+    })
   }
 
   options = {
@@ -39,11 +50,11 @@ function postMessage(id) {
   console.log('sending ' + botResponse + ' to ' + botID);
 
   botReq = HTTPS.request(options, function(res) {
-      if(res.statusCode == 202) {
-        //neat
-      } else {
-        console.log('rejecting bad status code ' + res.statusCode);
-      }
+    if(res.statusCode == 202) {
+      //neat
+    } else {
+      console.log('rejecting bad status code ' + res.statusCode);
+    }
   });
 
   botReq.on('error', function(err) {
