@@ -1,6 +1,6 @@
 var HTTPS = require('https');
 var cool = require('cool-ascii-faces');
-var insultgenerator = require('adorasult')
+var insultgenerator = require('insultgenerator');
 
 var botID = process.env.BOT_ID;
 
@@ -15,11 +15,10 @@ function respond() {
     this.res.end();
   }else if(request.text && botRegex2.test(request.text)) {
     this.res.writeHead(200);
-    // insultgenerator(function(insult)
-    // {
-    //   postMessage(insult);
-    // });
-    postMessage(insultgenerator());
+    insultgenerator(function(insult)
+    {
+      postMessage(insult);
+    });
     this.res.end();
   } else {
     console.log("don't care");
