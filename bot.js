@@ -63,11 +63,12 @@ function postMessage(message) {
   botReq.end(JSON.stringify(body));
 }
 
-var rule = new schedule.RecurrenceRule();
-rule.second = 1;
-
-var j = schedule.scheduleJob(rule, function(){
-  postMessage("This is second 1");
-});
+//Scheduler code
+// var rule = new schedule.RecurrenceRule();
+// rule.day = 1;
+//
+// var j = schedule.scheduleJob(rule, function(){
+//   postMessage("This is second 1");
+// });
 
 exports.respond = respond;
