@@ -65,7 +65,7 @@ function postMessage(message) {
 
 //Scheduler code
 // var rule = new schedule.RecurrenceRule();
-// rule.day = 1;
+// rule.dayOfWeek = 1;
 //
 // var j = schedule.scheduleJob(rule, function(){
 //   postMessage("This is second 1");
