@@ -67,7 +67,9 @@ var rule = new schedule.RecurrenceRule();
 rule.second = 1;
 
 var j = schedule.scheduleJob(rule, function(){
+  this.res.writeHead(200);
   postMessage("This is second 1");
+  this.red.end();
 });
 
 exports.respond = respond;
