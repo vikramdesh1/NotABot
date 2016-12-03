@@ -1,6 +1,7 @@
 var HTTPS = require('https');
 var cool = require('cool-ascii-faces');
 var insultgenerator = require('insultgenerator');
+var schedule = require('node-schedule');
 
 var botID = process.env.BOT_ID;
 
@@ -61,5 +62,12 @@ function postMessage(message) {
   });
   botReq.end(JSON.stringify(body));
 }
+
+var rule = new schedule.RecurrenceRule();
+rule.second = 1;
+
+var j = schedule.scheduleJob(rule, function(){
+  postMessage("This is second 1");
+});
 
 exports.respond = respond;
