@@ -17,13 +17,15 @@ function respond() {
     this.res.writeHead(200);
     postMessage(cool());
     this.res.end();
-  }else if(request.text && botRegex2.test(request.text)) {
+  } else if(request.text && botRegex2.test(request.text)) {
     this.res.writeHead(200);
     insultgenerator(function(insult)
     {
       postMessage(insult + " -insultgenerator.org");
     });
     this.res.end();
+  } else if(request.text && botRegex3.test(request.text)) {
+    testGet();
   } else {
     console.log("don't care");
     this.res.writeHead(200);
