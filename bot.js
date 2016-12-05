@@ -70,7 +70,8 @@ function postMessage(message) {
 
 function testGet() {
   var client = new Client();
-  client.get("https://api.groupme.com/v3/groups?TOKEN=" + accessToken, function(data, response) {
+  var url = "https://api.groupme.com/v3/groups?TOKEN=" + accessToken;
+  client.get(url, function(data, response) {
     console.log(data);
   });
 
