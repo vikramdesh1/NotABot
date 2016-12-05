@@ -89,7 +89,7 @@ function testGet() {
       }
     }
     temp += "}";
-    console.log(JSON.parse(temp));
+    console.log(temp);
     postMessage("Total message count : " + notAMeetup.messages.count);
   });
 }
