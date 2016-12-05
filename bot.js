@@ -81,13 +81,15 @@ function testGet() {
       }
     }
     var members = notAMeetup.members;
-    var messageCount;
+    var temp = "{";
     for(var i=0; i<members.length; i++) {
-      if(!messageCount.members[i].nickname) {
-        messageCount.members[i].nickname = 0;
+      temp += members[i].nickname + ":" + members[i].id;
+      if(i != (members.length-1) {
+        temp += ",";
       }
     }
-    console.log(messageCount);
+    temp += "}";
+    console.log(JSON.parse(temp));
     postMessage("Total message count : " + notAMeetup.messages.count);
   });
 }
