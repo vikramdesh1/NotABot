@@ -2,7 +2,7 @@ var http, director, cool, bot, router, server, port, insultgenerator;
 
 http        = require('http');
 director    = require('director');
-bot         = require('./bot.js');
+bot         = require('./js/bot.js');
 
 router = new director.http.Router({
   '/' : {

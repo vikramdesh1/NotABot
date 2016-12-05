@@ -3,6 +3,9 @@ var cool = require('cool-ascii-faces');
 var insultgenerator = require('insultgenerator');
 var Client = require('node-rest-client').Client;
 require('dotenv').config();
+var jsonfile = require('jsonfile');
+var utilities = require('./utilities.js');
+
 
 var botID = process.env.BOT_ID;
 var accessToken = process.env.ACCESS_TOKEN;
@@ -10,9 +13,9 @@ var notAMeetupId = process.env.NOTAMEETUP_ID;
 
 function respond() {
   var request = JSON.parse(this.req.chunks[0]),
-  botRegex1 = /\$coolasciiface/;
-  botRegex2 = /\$insult/;
-  botRegex3 = /\$testget/;
+  botRegex1 = /^\$coolasciiface/;
+  botRegex2 = /^\$insult/;
+  botRegex3 = /^\$commands/;
 
   if(request.text && botRegex1.test(request.text)) {
     this.res.writeHead(200);
@@ -22,11 +25,15 @@ function respond() {
     this.res.writeHead(200);
     insultgenerator(function(insult)
     {
-      postMessage(insult + " -insultgenerator.org");
+      postMessage(insult + " -www.insultgenerator.org");
     });
     this.res.end();
   } else if(request.text && botRegex3.test(request.text)) {
-    testGet();
+    this.res.writeHead(200);
+    var file = './data/commands.json';
+    var data = jsonfile.readFileSync(file);
+    postMessage(utilities.formatJSONForBot(JSON.stringify(data)));
+    this.res.end();
   } else {
     console.log("Don't care");
     this.res.writeHead(200);
@@ -84,12 +91,8 @@ function testGet() {
       }
     }
     array += "}";
-    postMessage(formatJSONForBot(array));
+    postMessage(utilities.formatJSONForBot(array));
   });
-}
-
-function formatJSONForBot(input) {
-  return input.replace(/,/g, "\n").replace("{", "").replace("}", "");
 }
 
 exports.respond = respond;

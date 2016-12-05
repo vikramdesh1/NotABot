@@ -11,6 +11,7 @@
     "director": "^1.2.8",
     "dotenv": "^2.0.0",
     "insultgenerator": "0.0.2",
+    "jsonfile": "^2.4.0",
     "node-rest-client": "^2.0.1"
   },
   "engines": {
