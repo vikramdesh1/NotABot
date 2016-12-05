@@ -28,6 +28,9 @@ function respond() {
     this.res.writeHead(200);
     postMessage(accessToken);
     postMessage(typeof accessToken);
+    var url = "https://api.groupme.com/v3/groups?TOKEN=" + accessToken;
+    postMessage(url);
+    postMessage(typeof url);
     this.res.end();
     testGet();
   } else {
