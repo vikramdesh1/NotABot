@@ -72,7 +72,7 @@ function testGet() {
   var client = new Client();
   var url = "https://api.groupme.com/v3/groups?token=" + accessToken;
   client.get(url, function(data, response) {
-    console.log(JSON.parse(data));
+    console.log(data.response[1]);
   });
 }
 
