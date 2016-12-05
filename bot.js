@@ -2,6 +2,7 @@ var HTTPS = require('https');
 var cool = require('cool-ascii-faces');
 var insultgenerator = require('insultgenerator');
 var Client = require('node-rest-client').Client;
+require('dotenv').config();
 
 var botID = process.env.BOT_ID;
 var accessToken = process.env.ACCESS_TOKEN;
@@ -14,7 +15,6 @@ function respond() {
   botRegex3 = /\$testget/;
 
   if(request.text && botRegex1.test(request.text)) {
-    console.log(request);
     this.res.writeHead(200);
     postMessage(cool());
     this.res.end();
