@@ -89,8 +89,12 @@ function testGet() {
       }
     }
     array += "}";
-    postMessage(array.replace(/,/g, "\n").replace("{", "").replace("}", ""));
+    postMessage(formatJSONForBot(array));
   });
+}
+
+function formatJSONForBot(var input) {
+  return input.replace(/,/g, "\n").replace("{", "").replace("}", "");
 }
 
 //Scheduler code
