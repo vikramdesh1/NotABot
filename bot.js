@@ -27,6 +27,7 @@ function respond() {
   } else if(request.text && botRegex3.test(request.text)) {
     this.res.writeHead(200);
     postMessage(accessToken);
+    postMessage(typeof accessToken);
     this.res.end();
     testGet();
   } else {
