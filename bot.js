@@ -30,29 +30,23 @@ function respond() {
   } else {
     console.log("Don't care");
     this.res.writeHead(200);
-    //postMessage("I'm sorry I don't recognize this command");
     this.res.end();
   }
 }
 
 function postMessage(message) {
   var botResponse, options, body, botReq;
-
   botResponse = message;
-
   options = {
     hostname: 'api.groupme.com',
     path: '/v3/bots/post',
     method: 'POST'
   };
-
   body = {
     "bot_id" : botID,
     "text" : botResponse
   };
-
   console.log('Sending ' + botResponse + ' to ' + botID);
-
   botReq = HTTPS.request(options, function(res) {
     if(res.statusCode == 202) {
       //neat
@@ -60,7 +54,6 @@ function postMessage(message) {
       console.log('Rejecting bad status code : ' + res.statusCode);
     }
   });
-
   botReq.on('error', function(err) {
     console.log('Error posting message : '  + JSON.stringify(err));
   });
@@ -82,6 +75,7 @@ function testGet() {
       }
     }
     var members = notAMeetup.members;
+    //Constructing JSON of member:id
     var array = "{";
     for(var i=0; i<members.length; i++) {
       array += "\"" + members[i].nickname + "\"" + ":" + "\"" + members[i].id + "\"";
@@ -99,7 +93,9 @@ function formatJSONForBot(input) {
 }
 
 var rule = new schedule.RecurrenceRule();
-rule.date = 6;
+rule.date = 5;
+rule.hour = 11;
+rule.minute = 15;
 
 var j = schedule.scheduleJob(rule, function(){
   postMessage("Today is the 6th!");
