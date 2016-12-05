@@ -98,12 +98,11 @@ function formatJSONForBot(input) {
   return input.replace(/,/g, "\n").replace("{", "").replace("}", "");
 }
 
-//Scheduler code
-// var rule = new schedule.RecurrenceRule();
-// rule.dayOfMonth = 1;
-//
-// var j = schedule.scheduleJob(rule, function(){
-//   postMessage("This is second 1");
-// });
+var rule = new schedule.RecurrenceRule();
+rule.date = 6;
+
+var j = schedule.scheduleJob(rule, function(){
+  postMessage("Today is the 6th!");
+});
 
 exports.respond = respond;
