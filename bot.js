@@ -28,8 +28,9 @@ function respond() {
   } else if(request.text && botRegex3.test(request.text)) {
     testGet();
   } else {
-    console.log("don't care");
+    console.log("Invalid command");
     this.res.writeHead(200);
+    postMessage("I'm sorry I don't recognize this command");
     this.res.end();
   }
 }
@@ -50,21 +51,21 @@ function postMessage(message) {
     "text" : botResponse
   };
 
-  console.log('sending ' + botResponse + ' to ' + botID);
+  console.log('Sending ' + botResponse + ' to ' + botID);
 
   botReq = HTTPS.request(options, function(res) {
     if(res.statusCode == 202) {
       //neat
     } else {
-      console.log('rejecting bad status code ' + res.statusCode);
+      console.log('Rejecting bad status code : ' + res.statusCode);
     }
   });
 
   botReq.on('error', function(err) {
-    console.log('error posting message '  + JSON.stringify(err));
+    console.log('Error posting message : '  + JSON.stringify(err));
   });
   botReq.on('timeout', function(err) {
-    console.log('timeout posting message '  + JSON.stringify(err));
+    console.log('Timeout posting message : '  + JSON.stringify(err));
   });
   botReq.end(JSON.stringify(body));
 }
