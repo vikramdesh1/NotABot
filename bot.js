@@ -25,9 +25,7 @@ function respond() {
     });
     this.res.end();
   } else if(request.text && botRegex3.test(request.text)) {
-    this.res.writeHead(200);
-    postMessage(testGet());
-    this.res.end();
+    testGet();
   } else {
     console.log("don't care");
     this.res.writeHead(200);
@@ -73,12 +71,9 @@ function postMessage(message) {
 function testGet() {
   var client = new Client();
   var url = "https://api.groupme.com/v3/groups?token=" + accessToken;
-  var d;
   client.get(url, function(data, response) {
-    console.log(data);
-    d = data;
+    console.log(JSON.parse(data));
   });
-  return d;
 }
 
 //Scheduler code
