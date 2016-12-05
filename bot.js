@@ -89,7 +89,7 @@ function testGet() {
       }
     }
     array += "}";
-    postMessage(temp);
+    postMessage(array);
   });
 }
 
