@@ -81,22 +81,21 @@ function testGet() {
       }
     }
     var members = notAMeetup.members;
-    var temp = "{";
+    var array = "{";
     for(var i=0; i<members.length; i++) {
-      temp += "\"" + members[i].nickname + "\"" + ":" + "\"" + members[i].id + "\"";
+      array += "\"" + members[i].nickname + "\"" + ":" + "\"" + members[i].id + "\"";
       if(i != (members.length-1)) {
-        temp += ",";
+        array += ",";
       }
     }
-    temp += "}";
-    console.log(temp);
-    postMessage("Total message count : " + notAMeetup.messages.count);
+    array += "}";
+    postMessage(temp);
   });
 }
 
 //Scheduler code
 // var rule = new schedule.RecurrenceRule();
-// rule.dayOfWeek = 1;
+// rule.dayOfMonth = 1;
 //
 // var j = schedule.scheduleJob(rule, function(){
 //   postMessage("This is second 1");
