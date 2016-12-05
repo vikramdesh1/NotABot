@@ -93,10 +93,10 @@ function formatJSONForBot(input) {
 }
 
 var rule = new schedule.RecurrenceRule();
-rule.second = 6;
+rule.minute = 1;
 
 var j = schedule.scheduleJob(rule, function(){
-  postMessage("This is the 6th second");
+  postMessage("This is the 1st minute");
 });
 
 exports.respond = respond;
