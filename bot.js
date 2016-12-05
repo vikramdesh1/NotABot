@@ -2,13 +2,16 @@ var HTTPS = require('https');
 var cool = require('cool-ascii-faces');
 var insultgenerator = require('insultgenerator');
 var schedule = require('node-schedule');
+var Client = require('node-rest-client').Client;
 
 var botID = process.env.BOT_ID;
+var accessToken = process.env.ACCESS_TOKEN;
 
 function respond() {
   var request = JSON.parse(this.req.chunks[0]),
   botRegex1 = /\$coolasciiface/;
   botRegex2 = /\$insult/;
+  botRegex3 = /\$testget/;
 
   if(request.text && botRegex1.test(request.text)) {
     this.res.writeHead(200);
@@ -61,6 +64,14 @@ function postMessage(message) {
     console.log('timeout posting message '  + JSON.stringify(err));
   });
   botReq.end(JSON.stringify(body));
+}
+
+function testGet() {
+  var client = new Client();
+  client.get("https://api.groupme.com/v3/groups?TOKEN=" + accessToken, function(data, response) {
+    console.log(data);
+  });
+
 }
 
 //Scheduler code
