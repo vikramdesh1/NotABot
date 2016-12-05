@@ -1,7 +1,6 @@
 var HTTPS = require('https');
 var cool = require('cool-ascii-faces');
 var insultgenerator = require('insultgenerator');
-var schedule = require('node-schedule');
 var Client = require('node-rest-client').Client;
 
 var botID = process.env.BOT_ID;
@@ -15,6 +14,7 @@ function respond() {
   botRegex3 = /\$testget/;
 
   if(request.text && botRegex1.test(request.text)) {
+    console.log(request);
     this.res.writeHead(200);
     postMessage(cool());
     this.res.end();
@@ -91,12 +91,5 @@ function testGet() {
 function formatJSONForBot(input) {
   return input.replace(/,/g, "\n").replace("{", "").replace("}", "");
 }
-
-var rule = new schedule.RecurrenceRule();
-rule.minute = 10;
-
-var j = schedule.scheduleJob(rule, function(){
-  postMessage("This is the 10th minute");
-});
 
 exports.respond = respond;
