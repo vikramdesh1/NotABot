@@ -6,6 +6,7 @@ var Client = require('node-rest-client').Client;
 
 var botID = process.env.BOT_ID;
 var accessToken = process.env.ACCESS_TOKEN;
+var notAMeetupId = process.env.NOTAMEETUP_ID;
 
 function respond() {
   var request = JSON.parse(this.req.chunks[0]),
@@ -75,11 +76,11 @@ function testGet() {
     var groups = data.response;
     var notAMeetup;
     for(var i=0; i<groups.length; i++) {
-      if(groups[i].group_id == "21970201") {
+      if(groups[i].group_id == notAMeetupId) {
         notAMeetup = groups[i];
       }
     }
-    console.log(notAMeetup);
+    postMessage("Total message count : " + notAMeetup.messages.count);
   });
 }
 
