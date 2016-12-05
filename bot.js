@@ -89,7 +89,7 @@ function testGet() {
       }
     }
     array += "}";
-    postMessage(array.replace(",", "\n"));
+    postMessage(array.replace(/,/g, "\n").replace("{", "").replace("}", ""));
   });
 }
 
