@@ -83,7 +83,7 @@ function testGet() {
     var members = notAMeetup.members;
     var temp = "{";
     for(var i=0; i<members.length; i++) {
-      temp += members[i].nickname + ":" + members[i].id;
+      temp += + "\"" + members[i].nickname + "\"" + ":" + "\"" + members[i].id + "\"";
       if(i != (members.length-1)) {
         temp += ",";
       }
