@@ -25,7 +25,9 @@ function respond() {
     });
     this.res.end();
   } else if(request.text && botRegex3.test(request.text)) {
+    this.res.writeHead(200);
     testGet();
+    this.res.end();
   } else {
     console.log("don't care");
     this.res.writeHead(200);
@@ -74,7 +76,7 @@ function testGet() {
   client.get(url, function(data, response) {
     console.log(data);
   });
-
+  return data;
 }
 
 //Scheduler code
