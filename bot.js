@@ -73,10 +73,12 @@ function postMessage(message) {
 function testGet() {
   var client = new Client();
   var url = "https://api.groupme.com/v3/groups?token=" + accessToken;
+  var d;
   client.get(url, function(data, response) {
     console.log(data);
+    d = data;
   });
-  return data;
+  return d;
 }
 
 //Scheduler code
