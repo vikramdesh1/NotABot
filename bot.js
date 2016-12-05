@@ -80,6 +80,14 @@ function testGet() {
         notAMeetup = groups[i];
       }
     }
+    var members = notAMeetup.members;
+    var messageCount;
+    for(var i=0; i<members.length; i++) {
+      if(!messageCount.members[i].nickname) {
+        messageCount.members[i].nickname = 0;
+      }
+    }
+    console.log(messageCount);
     postMessage("Total message count : " + notAMeetup.messages.count);
   });
 }
