@@ -72,7 +72,13 @@ function testGet() {
   var client = new Client();
   var url = "https://api.groupme.com/v3/groups?token=" + accessToken;
   client.get(url, function(data, response) {
-    console.log(data.response[1]);
+    var notAMeetup;
+    for(group in data.response) {
+      if(group.group_id == "21970201") {
+        notAMeetup = group;
+      }
+    }
+    console.log(group);
   });
 }
 
