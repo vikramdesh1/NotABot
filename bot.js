@@ -28,9 +28,9 @@ function respond() {
   } else if(request.text && botRegex3.test(request.text)) {
     testGet();
   } else {
-    console.log("Invalid command");
+    console.log("Don't care");
     this.res.writeHead(200);
-    postMessage("I'm sorry I don't recognize this command");
+    //postMessage("I'm sorry I don't recognize this command");
     this.res.end();
   }
 }
