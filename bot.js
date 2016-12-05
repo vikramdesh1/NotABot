@@ -84,7 +84,7 @@ function testGet() {
     var temp = "{";
     for(var i=0; i<members.length; i++) {
       temp += members[i].nickname + ":" + members[i].id;
-      if(i != (members.length-1) {
+      if(i != (members.length-1)) {
         temp += ",";
       }
     }
