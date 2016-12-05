@@ -26,7 +26,7 @@ function respond() {
     this.res.end();
   } else if(request.text && botRegex3.test(request.text)) {
     this.res.writeHead(200);
-    testGet();
+    postMessage(testGet());
     this.res.end();
   } else {
     console.log("don't care");
