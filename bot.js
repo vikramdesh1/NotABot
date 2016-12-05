@@ -93,7 +93,7 @@ function testGet() {
   });
 }
 
-function formatJSONForBot(var input) {
+function formatJSONForBot(input) {
   return input.replace(/,/g, "\n").replace("{", "").replace("}", "");
 }
 
