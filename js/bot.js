@@ -1,7 +1,6 @@
 var HTTPS = require('https');
 var cool = require('cool-ascii-faces');
 var insultgenerator = require('insultgenerator');
-var Client = require('node-rest-client').Client;
 require('dotenv').config();
 var jsonfile = require('jsonfile');
 var utilities = require('./utilities.js');
@@ -13,9 +12,10 @@ var notAMeetupId = process.env.NOTAMEETUP_ID;
 
 function respond() {
   var request = JSON.parse(this.req.chunks[0]),
-  botRegex1 = /^\$coolasciiface/;
-  botRegex2 = /^\$insult/;
-  botRegex3 = /^\$commands/;
+  botRegex1 = /^\$coolasciiface$/;
+  botRegex2 = /^\$insult$/;
+  botRegex3 = /^\$commands$/;
+  botRegex4 = /^\$messagestats$/;
 
   if(request.text && botRegex1.test(request.text)) {
     this.res.writeHead(200);
@@ -70,29 +70,5 @@ function postMessage(message) {
   botReq.end(JSON.stringify(body));
 }
 
-function testGet() {
-  var client = new Client();
-  var url = "https://api.groupme.com/v3/groups?token=" + accessToken;
-  client.get(url, function(data, response) {
-    var groups = data.response;
-    var notAMeetup;
-    for(var i=0; i<groups.length; i++) {
-      if(groups[i].group_id == notAMeetupId) {
-        notAMeetup = groups[i];
-      }
-    }
-    var members = notAMeetup.members;
-    //Constructing JSON of member:id
-    var array = "{";
-    for(var i=0; i<members.length; i++) {
-      array += "\"" + members[i].nickname + "\"" + ":" + "\"" + members[i].id + "\"";
-      if(i != (members.length-1)) {
-        array += ",";
-      }
-    }
-    array += "}";
-    postMessage(utilities.formatJSONForBot(array));
-  });
-}
-
 exports.respond = respond;
+exports.postMessage = postMessage;
