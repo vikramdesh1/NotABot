@@ -32,8 +32,7 @@ function respond() {
     this.res.writeHead(200);
     var file = './data/commands.json';
     var data = jsonfile.readFileSync(file);
-    postMessage("These are my currently supported commands : ");
-    postMessage(utilities.formatJSONForBot(JSON.stringify(data)));
+    postMessage("These are my currently supported commands : \n" + utilities.formatJSONForBot(JSON.stringify(data)));
     this.res.end();
   } else {
     console.log("Don't care");

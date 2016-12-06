@@ -26,7 +26,10 @@ function getMembers(whenDone) {
 function getMessageStats(whenDone) {
   var client = new Client();
   var url = "https://api.groupme.com/v3/groups/" + notAMeetupId + "/messages?token=" + accessToken;
-  var messageCount = [];
+  getMembers(function(members) {
+    
+  });
+
 }
 
 exports.formatJSONForBot = formatJSONForBot;
