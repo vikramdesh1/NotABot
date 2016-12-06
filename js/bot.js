@@ -25,7 +25,7 @@ function respond() {
     this.res.writeHead(200);
     insultgenerator(function(insult)
     {
-      postMessage(insult + " -www.insultgenerator.org");
+      postMessage(insult);
     });
     this.res.end();
   } else if(request.text && botRegex3.test(request.text)) {
