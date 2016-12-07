@@ -4,7 +4,7 @@ var notAMeetupId = process.env.NOTAMEETUP_ID;
 var bot = require('./bot.js');
 
 function formatJSONForBot(input) {
-  return input.replace(/,/g, ",\n").replace("{", "").replace("}", "").replace(/:/g, " : ");
+  return input.replace(/,/g, "\n").replace("{", "").replace("}", "").replace(/:/g, " : ");
 }
 
 function getMembers(whenDone) {
@@ -40,7 +40,7 @@ function getMessageStats(whenDone) {
       });
       var message = "The message statistics for the group in the format \"user\" : \"number of messages\" for past 30 days are - \n";
       for(var i=0; i<members.length; i++) {
-        message += "\"" + members[i].nickname + "\" : \"" + members[i].score + "\",";
+        message += "\"" + members[i].nickname + "\" : \"" + members[i].score + "\"";
         if(i != members.length - 1) {
           message += "\n";
         }
