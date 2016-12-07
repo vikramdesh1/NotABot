@@ -4,7 +4,7 @@ var notAMeetupId = process.env.NOTAMEETUP_ID;
 var bot = require('./bot.js');
 
 function formatJSONForBot(input) {
-  return input.replace(/,/g, "\n").replace("{", "").replace("}", "");
+  return input.replace(/,/g, ",\n").replace("{", "").replace("}", "").replace(/:/g, " : ");
 }
 
 function getMembers(whenDone) {
@@ -24,9 +24,31 @@ function getMembers(whenDone) {
 }
 
 function getMessageStats(whenDone) {
-  getMessagesFor30Days(0, function(messages) {
-    console.log(messages);
+  var members;
+  getMembers(function(output) {
+    members = output;
+    members.forEach(function(member) {
+      member["score"] = 0;
+    });
+    getMessagesFor30Days(0, function(messages) {
+      members.forEach(function(member) {
+        messages.forEach(function(message) {
+          if(message.sender_id == member.user_id) {
+            member.score++;
+          }
+        });
+      });
+      var message = "The message statistics for the group in the format \"user\" : \"number of messages\" for past 30 days are - \n";
+      for(var i=0; i<members.length; i++) {
+        message += "\"" + members[i].nickname + "\" : \"" + members[i].score + "\",";
+        if(i != members.length - 1) {
+          message += "\n";
+        }
+      }
+      whenDone(message);
+    });
   });
+
 }
 
 var globalMessages = [];

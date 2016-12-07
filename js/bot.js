@@ -15,7 +15,7 @@ function respond() {
   botRegex1 = /^\$coolasciiface$/;
   botRegex2 = /^\$insult$/;
   botRegex3 = /^\$commands$/;
-  botRegex4 = /^\$test$/;
+  botRegex4 = /^\$messagestats$/;
 
   if(request.text && botRegex1.test(request.text)) {
     this.res.writeHead(200);
@@ -32,10 +32,12 @@ function respond() {
     this.res.writeHead(200);
     var file = './data/commands.json';
     var data = jsonfile.readFileSync(file);
-    postMessage("These are my currently supported commands : \n" + utilities.formatJSONForBot(JSON.stringify(data)));
+    postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
     this.res.end();
   } else if(request.text && botRegex4.test(request.text)) {
-    utilities.getMessageStats();
+    utilities.getMessageStats(function(message) {
+      postMessage(message);
+    });
     this.res.end();
   } else {
     console.log("Don't care");
