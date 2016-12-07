@@ -38,14 +38,15 @@ function getMessageStats(whenDone) {
           }
         });
       });
-      var message = "The message statistics for the group in the format \"user\" : \"number of messages\" for past 30 days are - \n";
+      var stats = "{";
       for(var i=0; i<members.length; i++) {
-        message += "\"" + members[i].nickname + "\" : \"" + members[i].score + "\"";
+        stats += "\"" + members[i].nickname + "\":\"" + members[i].score + "\"";
         if(i != members.length - 1) {
-          message += "\n";
+          stats += ",";
         }
       }
-      whenDone(message);
+      stats += "}";
+      whenDone(stats);
     });
   });
 

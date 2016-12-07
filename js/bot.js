@@ -36,7 +36,7 @@ function respond() {
     this.res.end();
   } else if(request.text && botRegex4.test(request.text)) {
     utilities.getMessageStats(function(message) {
-      postMessage(message);
+      postMessage("These are the message counts for every user in this group for the past 30 days - \n" + utilities.formatJSONForBot(message));
     });
     this.res.end();
   } else {
