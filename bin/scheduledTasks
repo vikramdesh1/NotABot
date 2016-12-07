@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+function runScheduledTask() {
+  console.log("Scheduler ran at " + new Date());
+}
+
+runScheduledTask();
