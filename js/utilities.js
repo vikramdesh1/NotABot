@@ -63,14 +63,14 @@ function getMessagesFor30Days(before_id, whenDone) {
   else {
     globalMessages = [];
   }
+  var thirtyDaysAgo = Date.now() - 2592000000;
   client.get(url, function(data, response){
     data.response.messages.forEach(function(message) {
-      if(message.sender_type != "bot") {
+      if(message.sender_type != "bot" && ((message.created_at * 1000) > (thirtyDaysAgo - 86400000))) {
         globalMessages.push(message);
       }
     });
     var lastMessage = globalMessages[globalMessages.length - 1];
-    var thirtyDaysAgo = Date.now() - 2592000000;
     if((lastMessage.created_at * 1000) > thirtyDaysAgo) {
       getMessagesFor30Days(lastMessage.id, function(messages) {
         whenDone(globalMessages);
