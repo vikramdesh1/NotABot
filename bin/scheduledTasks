@@ -3,11 +3,12 @@
 var bot = require('../js/bot.js');
 
 function runScheduledTask() {
-  var date = new Date().getDate();
+  var today = new Date();
+  var  date = new today().getDate();
   switch (date) {
-    case 1: bot.purge(); console.log("Purge run on " + date); break;
+    case 1: bot.purge(); console.log("Purge run on " + today); break;
     case 28: break;
-    default: console.log("Scheduler ran on " + date); break;
+    default: console.log("Scheduler ran on " + today); break;
   }
 }
 
