@@ -13,33 +13,34 @@ var notAMeetupId = process.env.NOTAMEETUP_ID;
 function respond() {
   //comparing incoming message to regexes to determine what action to take
   var request = JSON.parse(this.req.chunks[0]),
-  botRegex1 = /^\$coolasciiface$/;
-  botRegex2 = /^\$insult$/;
-  botRegex3 = /^\$commands$/;
-  botRegex4 = /^\$messagestats$/;
-  botRegex5 = /^\$test$/;
+  botRegex1 = /\$coolasciiface/;
+  botRegex2 = /\$insult/;
+  botRegex3 = /\$commands/;
+  botRegex4 = /\$messagestats/;
+  botRegex5 = /\$test/;
 
-  this.res.writeHead(200);
-  console.log(this.req.chunks);
-  if(request.text && botRegex1.test(request.text)) {
-    postMessage(cool());
-  } else if(request.text && botRegex2.test(request.text)) {
-    insultgenerator(function(insult)
-    {
-      postMessage(insult);
-    });
-  } else if(request.text && botRegex3.test(request.text)) {
-    var file = './data/commands.json';
-    var data = jsonfile.readFileSync(file);
-    postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
-  } else if(request.text && botRegex4.test(request.text)) {
-    sendMessageStats();
-  } else if(request.text && botRegex5.test(request.text)) {
-    purge();
-  } else {
-    //do nothing
+  if(request.sender_type != "bot") {
+    this.res.writeHead(200);
+    if(request.text && botRegex1.test(request.text)) {
+      postMessage(cool());
+    } else if(request.text && botRegex2.test(request.text)) {
+      insultgenerator(function(insult)
+      {
+        postMessage(insult);
+      });
+    } else if(request.text && botRegex3.test(request.text)) {
+      var file = './data/commands.json';
+      var data = jsonfile.readFileSync(file);
+      postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
+    } else if(request.text && botRegex4.test(request.text)) {
+      sendMessageStats();
+    } else if(request.text && botRegex5.test(request.text)) {
+      purge();
+    } else {
+      //do nothing
+    }
+    this.res.end();
   }
-  this.res.end();
 }
 
 function postMessage(message) {
