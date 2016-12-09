@@ -4,6 +4,7 @@ var insultgenerator = require('insultgenerator');
 require('dotenv').config();
 var jsonfile = require('jsonfile');
 var utilities = require('./utilities.js');
+var Client = require('node-rest-client').Client;
 
 
 var botID = process.env.BOT_ID;
@@ -35,7 +36,7 @@ function respond() {
     } else if(request.text && botRegex4.test(request.text)) {
       sendMessageStats();
     } else if(request.text && botRegex5.test(request.text)) {
-      purge();
+      //
     } else {
       //do nothing
     }
@@ -86,12 +87,14 @@ function sendPurgeWarning() {
 }
 
 function sendMessageStats() {
+  //send message stats
   utilities.getMessageStats(function(message) {
-    postMessage("These are the message counts for every user in this group for the past 30 days - \n" + utilities.formatJSONForBot(message));
+    postMessage("These are the message counts for every member of this group for the past 30 days - \n" + utilities.formatJSONForBot(message));
   });
 }
 
 function sendPurgeConfirmation() {
+  //purge and confirm
   utilities.purge(function(message) {
     postMessage(message);
   });

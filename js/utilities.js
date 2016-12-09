@@ -74,7 +74,7 @@ var globalMessages = [];
 var lastLoop = 0;
 function getMessagesFor30Days(before_id, whenDone) {
   //get all messages from the group posted within the last ~30 days
-  //don't knwo how i got this to work but there's recursion and shit in here
+  //don't know how i got this to work but there's recursion and shit in here
   var client = new Client();
   var url = "https://api.groupme.com/v3/groups/" + notAMeetupId + "/messages?token=" + accessToken + "&limit=100";
   if(before_id != 0 ) {
@@ -109,6 +109,7 @@ function getMessagesFor30Days(before_id, whenDone) {
 }
 
 function purge(whenDone) {
+  var client = new Client();
   var toBeKicked = [];
   var message = "";
   getMessageStats(function(stats, members) {
@@ -130,9 +131,20 @@ function purge(whenDone) {
     }
     whenDone(message);
     //kick people here
+    var args = {
+      data: {},
+      headers: {}
+    };
+    var url = "https://api.groupme.com/v3/groups/" + notAMeetupId + "/members/" + member.id + "/remove?token=" + accessToken;
+    toBeKicked.forEach(function(member) {
+      client.post(url, args, function (data, response) {
+        console.log("Removing " + member.nickname + " from group - " + data);
+      });
+    });
   });
 }
 
 exports.formatJSONForBot = formatJSONForBot;
+exports.getMembers = getMembers;
 exports.getMessageStats = getMessageStats;
 exports.purge = purge;
