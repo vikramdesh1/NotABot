@@ -11,6 +11,7 @@ var accessToken = process.env.ACCESS_TOKEN;
 var notAMeetupId = process.env.NOTAMEETUP_ID;
 
 function respond() {
+  //comparing incoming message to regexes to determine what action to take
   var request = JSON.parse(this.req.chunks[0]),
   botRegex1 = /^\$coolasciiface$/;
   botRegex2 = /^\$insult$/;
@@ -35,7 +36,9 @@ function respond() {
       postMessage("These are the message counts for every user in this group for the past 30 days - \n" + utilities.formatJSONForBot(message));
     });
   } else if(request.text && botRegex5.test(request.text)) {
-    console.log(__filename);
+    utilities.getMessageStats(function(stats) {
+      //
+    });
   } else {
     //do nothing
   }
@@ -43,6 +46,7 @@ function respond() {
 }
 
 function postMessage(message) {
+  //sending message to bot
   var botResponse, options, body, botReq;
   botResponse = message;
   options = {
@@ -72,10 +76,12 @@ function postMessage(message) {
 }
 
 function purge() {
+  //kick all members from the group who have had no activity for the past ~30 days
   console.log("purge");
 }
 
 function sendPurgeWarning() {
+  //warn group members that the purge is coming
   console.log("purgeWarning");
 }
 

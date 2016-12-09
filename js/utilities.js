@@ -4,10 +4,12 @@ var notAMeetupId = process.env.NOTAMEETUP_ID;
 var bot = require('./bot.js');
 
 function formatJSONForBot(input) {
+  //making JSON readable
   return input.replace(/,/g, "\n").replace("{", "").replace("}", "").replace(/:/g, " : ");
 }
 
 function getMembers(whenDone) {
+  //fetch array of group members
   var client = new Client();
   var url = "https://api.groupme.com/v3/groups?token=" + accessToken;
   client.get(url, function(data, response) {
@@ -24,6 +26,7 @@ function getMembers(whenDone) {
 }
 
 function getMessageStats(whenDone) {
+  //return sorted list of members with number of messages they've sent in the last ~30 days
   var members;
   getMembers(function(output) {
     members = output;
@@ -38,6 +41,21 @@ function getMessageStats(whenDone) {
           }
         });
       });
+      //ssorting list in descending order of number of messages (yeah, yeah bubble sort i know)
+      var n = members.length;
+      while(n != 0) {
+        var newN = 0;
+        for(var i=1; i<members.length; i++) {
+          if(members[i-1].score < members[i].score) {
+            var temp = members[i-1];
+            members[i-1] = members[i];
+            members[i] = temp;
+            newN = i;
+          }
+        }
+        n = newN;
+      }
+      //constructing object from array
       var stats = "{";
       for(var i=0; i<members.length; i++) {
         stats += "\"" + members[i].nickname + "\":\"" + members[i].score + "\"";
@@ -55,6 +73,8 @@ function getMessageStats(whenDone) {
 var globalMessages = [];
 var lastLoop = 0;
 function getMessagesFor30Days(before_id, whenDone) {
+  //get all messages from the group posted within the last ~30 days
+  //don't knwo how i got this to work but there's recursion and shit in here
   var client = new Client();
   var url = "https://api.groupme.com/v3/groups/" + notAMeetupId + "/messages?token=" + accessToken + "&limit=100";
   if(before_id != 0 ) {
@@ -66,12 +86,13 @@ function getMessagesFor30Days(before_id, whenDone) {
   var thirtyDaysAgo = Date.now() - 2592000000;
   client.get(url, function(data, response){
     data.response.messages.forEach(function(message) {
+      //multiplying timestamp by 1000 because groupme has timestamps in seconds instead of milliseconds
+      //subtracting one day from thirtyDaysAgo because of some twisted logic, but hey it works
       if(((message.created_at * 1000) > (thirtyDaysAgo - 86400000))) {
         globalMessages.push(message);
       }
     });
     var lastMessage = globalMessages[globalMessages.length - 1];
-    console.log(globalMessages.length);
     if(((lastMessage.created_at * 1000) > thirtyDaysAgo) && (globalMessages.length % 100 == 0)) {
       getMessagesFor30Days(lastMessage.id, function(messages) {
         whenDone(globalMessages);
