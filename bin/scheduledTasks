@@ -1,7 +1,14 @@
 #!/usr/bin/env node
 
+var bot = require('../js/bot.js');
+
 function runScheduledTask() {
-  console.log("Scheduler ran at " + new Date());
+  var date = new Date().getDate();
+  switch (date) {
+    case 1: purge(); break;
+    case 28: sendPurgeWarning(); break;
+    default: console.log("Today's date is " + date); break;
+  }
 }
 
 runScheduledTask();

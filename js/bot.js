@@ -36,9 +36,14 @@ function respond() {
     postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
     this.res.end();
   } else if(request.text && botRegex4.test(request.text)) {
+    this.res.writeHead(200);
     utilities.getMessageStats(function(message) {
       postMessage("These are the message counts for every user in this group for the past 30 days - \n" + utilities.formatJSONForBot(message));
     });
+    this.res.end();
+  } else if(request.text && botRegex5.test(request.text)) {
+    this.res.writeHead(200);
+    console.log(__filename);
     this.res.end();
   } else {
     this.res.writeHead(200);
