@@ -38,7 +38,12 @@ function respond() {
     } else if(request.text && botRegex5.test(request.text)) {
       //
     } else {
-      //do nothing
+      //welcome message
+      if(request.system == true && request.event.type == "membership.announce.added") {
+        request.event.data.added_users.forEach(function(user) {
+          postMessage("Welcome to the group " + user.nickname + "!");
+        });
+      }
     }
     this.res.end();
   }
