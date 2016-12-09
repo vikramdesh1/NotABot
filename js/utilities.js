@@ -93,6 +93,7 @@ function getMessagesFor30Days(before_id, whenDone) {
       }
     });
     var lastMessage = globalMessages[globalMessages.length - 1];
+    //some twisted logic again, smh
     if(((lastMessage.created_at * 1000) > thirtyDaysAgo) && (globalMessages.length % 100 == 0)) {
       getMessagesFor30Days(lastMessage.id, function(messages) {
         whenDone(globalMessages);
@@ -116,12 +117,16 @@ function purge(whenDone) {
         toBeKicked.push(member);
       }
     });
-    message += "The following members are being removed for inactivity - \n";
-    for(var i=0; i<toBeKicked.length; i++) {
-      message += "\"" + toBeKicked[i].nickname + "\"";
-      if(i != toBeKicked.length - 1) {
-        message += "\n";
+    if(toBeKicked.length > 0) {
+      message += "The following members are being removed for inactivity - \n";
+      for(var i=0; i<toBeKicked.length; i++) {
+        message += "\"" + toBeKicked[i].nickname + "\"";
+        if(i != toBeKicked.length - 1) {
+          message += "\n";
+        }
       }
+    } else {
+      message += "Looks like everyone survived this one. Until next time...";
     }
     whenDone(message);
     //kick people here

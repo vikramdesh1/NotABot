@@ -20,6 +20,7 @@ function respond() {
   botRegex5 = /^\$test$/;
 
   this.res.writeHead(200);
+  console.log(this.req.chunks);
   if(request.text && botRegex1.test(request.text)) {
     postMessage(cool());
   } else if(request.text && botRegex2.test(request.text)) {
