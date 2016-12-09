@@ -80,5 +80,15 @@ function postMessage(message) {
   botReq.end(JSON.stringify(body));
 }
 
+function purge() {
+  console.log("purge");
+}
+
+function sendPurgeWarning() {
+  console.log("purgeWarning");
+}
+
 exports.respond = respond;
 exports.postMessage = postMessage;
+exports.purge = purge;
+exports.sendPurgeWarning = sendPurgeWarning;
