@@ -32,13 +32,9 @@ function respond() {
     var data = jsonfile.readFileSync(file);
     postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
   } else if(request.text && botRegex4.test(request.text)) {
-    utilities.getMessageStats(function(message) {
-      postMessage("These are the message counts for every user in this group for the past 30 days - \n" + utilities.formatJSONForBot(message));
-    });
+    sendMessageStats();
   } else if(request.text && botRegex5.test(request.text)) {
-    utilities.getMessageStats(function(stats) {
-      //
-    });
+    purge();
   } else {
     //do nothing
   }
@@ -77,12 +73,26 @@ function postMessage(message) {
 
 function purge() {
   //kick all members from the group who have had no activity for the past ~30 days
-  console.log("purge");
+  postMessage("!!!THIS IS NOT A TEST!!! The monthly purge is about to commence. Hold on to your butts!");
+  setTimeout(sendMessageStats, 5000);
+  setTimeout(sendPurgeConfirmation, 15000);
 }
 
 function sendPurgeWarning() {
   //warn group members that the purge is coming
   console.log("purgeWarning");
+}
+
+function sendMessageStats() {
+  utilities.getMessageStats(function(message) {
+    postMessage("These are the message counts for every user in this group for the past 30 days - \n" + utilities.formatJSONForBot(message));
+  });
+}
+
+function sendPurgeConfirmation() {
+  utilities.purge(function(message) {
+    postMessage(message);
+  });
 }
 
 exports.respond = respond;

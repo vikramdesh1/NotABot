@@ -41,7 +41,7 @@ function getMessageStats(whenDone) {
           }
         });
       });
-      //ssorting list in descending order of number of messages (yeah, yeah bubble sort i know)
+      //sorting list in descending order of number of messages (yeah, yeah bubble sort i know)
       var n = members.length;
       while(n != 0) {
         var newN = 0;
@@ -64,7 +64,7 @@ function getMessageStats(whenDone) {
         }
       }
       stats += "}";
-      whenDone(stats);
+      whenDone(stats, members);
     });
   });
 
@@ -107,5 +107,27 @@ function getMessagesFor30Days(before_id, whenDone) {
   });
 }
 
+function purge(whenDone) {
+  var toBeKicked = [];
+  var message = "";
+  getMessageStats(function(stats, members) {
+    members.forEach(function(member) {
+      if(member.score == 0) {
+        toBeKicked.push(member);
+      }
+    });
+    message += "The following members are being removed for inactivity - \n";
+    for(var i=0; i<toBeKicked.length; i++) {
+      message += "\"" + toBeKicked[i].nickname + "\"";
+      if(i != toBeKicked.length - 1) {
+        message += "\n";
+      }
+    }
+    whenDone(message);
+    //kick people here
+  });
+}
+
 exports.formatJSONForBot = formatJSONForBot;
 exports.getMessageStats = getMessageStats;
+exports.purge = purge;
