@@ -39,7 +39,8 @@ function respond() {
       //
     } else {
       //welcome message
-      if(request.system == true && request.event.type == "membership.announce.added") {
+      console.log(request);
+      if(request.sender_type == "system" && request.event.type == "membership.announce.added") {
         request.event.data.added_users.forEach(function(user) {
           postMessage("Welcome to the group " + user.nickname + "!");
         });
