@@ -16,6 +16,7 @@ function respond() {
   botRegex2 = /^\$insult$/;
   botRegex3 = /^\$commands$/;
   botRegex4 = /^\$messagestats$/;
+  botRegex5 = /^\$test$/;
 
   if(request.text && botRegex1.test(request.text)) {
     this.res.writeHead(200);
