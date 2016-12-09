@@ -18,37 +18,28 @@ function respond() {
   botRegex4 = /^\$messagestats$/;
   botRegex5 = /^\$test$/;
 
+  this.res.writeHead(200);
   if(request.text && botRegex1.test(request.text)) {
-    this.res.writeHead(200);
     postMessage(cool());
-    this.res.end();
   } else if(request.text && botRegex2.test(request.text)) {
-    this.res.writeHead(200);
     insultgenerator(function(insult)
     {
       postMessage(insult);
     });
-    this.res.end();
   } else if(request.text && botRegex3.test(request.text)) {
-    this.res.writeHead(200);
     var file = './data/commands.json';
     var data = jsonfile.readFileSync(file);
     postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
-    this.res.end();
   } else if(request.text && botRegex4.test(request.text)) {
-    this.res.writeHead(200);
     utilities.getMessageStats(function(message) {
       postMessage("These are the message counts for every user in this group for the past 30 days - \n" + utilities.formatJSONForBot(message));
     });
-    this.res.end();
   } else if(request.text && botRegex5.test(request.text)) {
-    this.res.writeHead(200);
     console.log(__filename);
-    this.res.end();
   } else {
-    this.res.writeHead(200);
-    this.res.end();
+    //do nothing
   }
+  this.res.end();
 }
 
 function postMessage(message) {
@@ -66,7 +57,7 @@ function postMessage(message) {
   console.log('Sending ' + botResponse + ' to ' + botID);
   botReq = HTTPS.request(options, function(res) {
     if(res.statusCode == 202) {
-      //neat
+      //this is good
     } else {
       console.log('Rejecting bad status code : ' + res.statusCode);
     }

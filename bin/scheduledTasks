@@ -3,8 +3,6 @@
 var bot = require('../js/bot.js');
 
 function runScheduledTask() {
-  bot.purge();
-  bot.sendPurgeWarning();
   var date = new Date().getDate();
   switch (date) {
     case 1: bot.purge(); break;
