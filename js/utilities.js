@@ -1,7 +1,7 @@
-var Client = require('node-rest-client').Client;
+var Client = require("node-rest-client").Client;
 var accessToken = process.env.ACCESS_TOKEN;
 var notAMeetupId = process.env.NOTAMEETUP_ID;
-var bot = require('./bot.js');
+var bot = require("./bot.js");
 
 function formatJSONForBot(input) {
   //making JSON readable
