@@ -18,7 +18,7 @@ function respond() {
   botRegex2 = /\$insult/;
   botRegex3 = /\$commands/;
   botRegex4 = /\$messagestats (\d+)/;
-  botRegex5 = /\$test/;
+  botRegex5 = /\$messagestats/;
 
   if(request.sender_type != "bot") {
     this.res.writeHead(200);
@@ -43,7 +43,7 @@ function respond() {
         }
 
     } else if(request.text && botRegex5.test(request.text)) {
-        purge();
+        sendMessageStats(-1);
     } else {
       //do nothing
     }
@@ -98,7 +98,12 @@ function sendPurgeWarning() {
 function sendMessageStats(numberOfDays) {
   //send message stats
   utilities.getMessageStats(numberOfDays, function(message) {
+    if(numberOfDays != -1) {
     postMessage("These are the message counts for every member of this group for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
+  } else if(numberOfDays == -1) {
+    postMessage("These are the message counts for every member of this group for the lifetime of the group - \n" + utilities.formatJSONForBot(message));
+
+  }
   });
 }
 
