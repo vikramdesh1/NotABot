@@ -101,7 +101,7 @@ function sendMessageStats(numberOfDays) {
     if(numberOfDays != -1) {
       postMessage("These are the message counts for every member of this group for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
     } else if(numberOfDays == -1) {
-      postMessage("These are the message counts for every member of this group for the lifetime of the group - \n" + utilities.formatJSONForBot(message));
+      postMessage("These are the message counts for every member of this group for its lifetime - \n" + utilities.formatJSONForBot(message));
 
     }
   });
