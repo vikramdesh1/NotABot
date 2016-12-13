@@ -83,6 +83,7 @@ function getMessages(numberOfDays, before_id, whenDone) {
   else {
     globalMessages = [];
   }
+  //using -1 as flag indicating that the entire message history needs to be fetched
   if(numberOfDays != -1) {
     var nDaysAgo = Date.now() - (numberOfDays * 86400000);
     client.get(url, function(data, response){
@@ -118,7 +119,6 @@ function getMessages(numberOfDays, before_id, whenDone) {
         });
         lastMessage = globalMessages[globalMessages.length - 1];
       }
-
       //some twisted logic again, smh
       if(lastMessage != null) {
         getMessages(-1, lastMessage.id, function(messages) {

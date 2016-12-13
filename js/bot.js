@@ -87,7 +87,7 @@ function purge() {
   setTimeout(function() {
     sendMessageStats(30);
   }, 5000);
-  setTimeout(sendPurgeConfirmation, 10000);
+  setTimeout(purgeAndConfirm, 10000);
 }
 
 function sendPurgeWarning() {
@@ -107,7 +107,7 @@ function sendMessageStats(numberOfDays) {
   });
 }
 
-function sendPurgeConfirmation() {
+function purgeAndConfirm() {
   //purge and confirm
   utilities.purge(function(message) {
     postMessage(message);
