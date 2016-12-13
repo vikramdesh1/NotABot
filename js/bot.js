@@ -17,7 +17,7 @@ function respond() {
   botRegex1 = /\$coolasciiface/;
   botRegex2 = /\$insult/;
   botRegex3 = /\$commands/;
-  botRegex4 = /\$messagestats/;
+  botRegex4 = /\$messagestats (\d+)/;
   botRegex5 = /\$test/;
 
   if(request.sender_type != "bot") {
@@ -34,9 +34,16 @@ function respond() {
       var data = jsonfile.readFileSync(file);
       postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
     } else if(request.text && botRegex4.test(request.text)) {
-      sendMessageStats();
+        var numberOfDays = botRegex4.exec(request.text)[1];
+        if(numberOfDays != undefined && numberOfDays > 0) {
+          sendMessageStats(numberOfDays);
+        }
+        else {
+          postMessage("The number of days for fetching message stats is invalid");
+        }
+
     } else if(request.text && botRegex5.test(request.text)) {
-      //
+        purge();
     } else {
       //do nothing
     }
@@ -75,10 +82,12 @@ function postMessage(message) {
 }
 
 function purge() {
-  //kick all members from the group who have had no activity for the past ~30 days
+  //kick all members from the group who have had no activity for the past 30 days
   postMessage("!!!THIS IS NOT A TEST!!! The monthly purge is about to commence. Hold on to your butts!");
-  setTimeout(sendMessageStats, 5000);
-  setTimeout(sendPurgeConfirmation, 15000);
+  setTimeout(function() {
+    sendMessageStats(30);
+  }, 5000);
+  setTimeout(sendPurgeConfirmation, 10000);
 }
 
 function sendPurgeWarning() {
@@ -86,10 +95,10 @@ function sendPurgeWarning() {
   console.log("purgeWarning");
 }
 
-function sendMessageStats() {
+function sendMessageStats(numberOfDays) {
   //send message stats
-  utilities.getMessageStats(function(message) {
-    postMessage("These are the message counts for every member of this group for the past 30 days - \n" + utilities.formatJSONForBot(message));
+  utilities.getMessageStats(numberOfDays, function(message) {
+    postMessage("These are the message counts for every member of this group for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
   });
 }
 

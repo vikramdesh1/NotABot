@@ -25,15 +25,15 @@ function getMembers(whenDone) {
   });
 }
 
-function getMessageStats(whenDone) {
-  //return sorted list of members with number of messages they've sent in the last ~30 days
+function getMessageStats(numberOfDays, whenDone) {
+  //return sorted list of members with number of messages they've sent in the last n days
   var members;
   getMembers(function(output) {
     members = output;
     members.forEach(function(member) {
       member["score"] = 0;
     });
-    getMessagesFor30Days(0, function(messages) {
+    getMessages(numberOfDays, 0, function(messages) {
       members.forEach(function(member) {
         messages.forEach(function(message) {
           if(message.sender_id == member.user_id) {
@@ -72,8 +72,8 @@ function getMessageStats(whenDone) {
 
 var globalMessages = [];
 var lastLoop = 0;
-function getMessagesFor30Days(before_id, whenDone) {
-  //get all messages from the group posted within the last ~30 days
+function getMessages(numberOfDays, before_id, whenDone) {
+  //get all messages from the group posted within the last ~n days
   //don't know how i got this to work but there's recursion and shit in here
   var client = new Client();
   var url = "https://api.groupme.com/v3/groups/" + notAMeetupId + "/messages?token=" + accessToken + "&limit=100";
@@ -83,19 +83,19 @@ function getMessagesFor30Days(before_id, whenDone) {
   else {
     globalMessages = [];
   }
-  var thirtyDaysAgo = Date.now() - 2592000000;
+  var nDaysAgo = Date.now() - (numberOfDays * 86400000);
   client.get(url, function(data, response){
     data.response.messages.forEach(function(message) {
       //multiplying timestamp by 1000 because groupme has timestamps in seconds instead of milliseconds
-      //subtracting one day from thirtyDaysAgo because of some twisted logic, but hey it works
-      if(((message.created_at * 1000) > (thirtyDaysAgo - 86400000))) {
+      //subtracting one hour from nDaysAgo because of some twisted logic, but hey it works
+      if(((message.created_at * 1000) > (nDaysAgo - 3600000))) {
         globalMessages.push(message);
       }
     });
     var lastMessage = globalMessages[globalMessages.length - 1];
     //some twisted logic again, smh
-    if(((lastMessage.created_at * 1000) > thirtyDaysAgo) && (globalMessages.length % 100 == 0)) {
-      getMessagesFor30Days(lastMessage.id, function(messages) {
+    if(((lastMessage.created_at * 1000) > nDaysAgo) && (globalMessages.length % 100 == 0)) {
+      getMessages(numberOfDays, lastMessage.id, function(messages) {
         whenDone(globalMessages);
       });
       lastLoop = 0;
@@ -112,7 +112,7 @@ function purge(whenDone) {
   var client = new Client();
   var toBeKicked = [];
   var message = "";
-  getMessageStats(function(stats, members) {
+  getMessageStats(30, function(stats, members) {
     members.forEach(function(member) {
       if(member.score == 0) {
         toBeKicked.push(member);
@@ -135,10 +135,12 @@ function purge(whenDone) {
       data: {},
       headers: {}
     };
-    var url = "https://api.groupme.com/v3/groups/" + notAMeetupId + "/members/" + member.id + "/remove?token=" + accessToken;
     toBeKicked.forEach(function(member) {
-      client.post(url, args, function (data, response) {
-        console.log("Removing " + member.nickname + " from group - " + data);
+      var url = "https://api.groupme.com/v3/groups/" + notAMeetupId + "/members/" + member.id + "/remove?token=" + accessToken;
+      toBeKicked.forEach(function(member) {
+        client.post(url, args, function (data, response) {
+          console.log("Removing " + member.nickname + " from group - " + data);
+        });
       });
     });
   });
