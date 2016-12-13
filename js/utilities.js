@@ -111,13 +111,13 @@ function getMessages(numberOfDays, before_id, whenDone) {
     var lastMessage = null;
     client.get(url, function(data, response){
       if(data.response != undefined) {
-      data.response.messages.forEach(function(message) {
-        //multiplying timestamp by 1000 because groupme has timestamps in seconds instead of milliseconds
-        //subtracting one hour from nDaysAgo because of some twisted logic, but hey it works
+        data.response.messages.forEach(function(message) {
+          //multiplying timestamp by 1000 because groupme has timestamps in seconds instead of milliseconds
+          //subtracting one hour from nDaysAgo because of some twisted logic, but hey it works
           globalMessages.push(message);
-      });
-      lastMessage = globalMessages[globalMessages.length - 1];
-    }
+        });
+        lastMessage = globalMessages[globalMessages.length - 1];
+      }
 
       //some twisted logic again, smh
       if(lastMessage != null) {
