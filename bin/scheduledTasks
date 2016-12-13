@@ -7,7 +7,6 @@ function runScheduledTask() {
   var  date = today.getDate();
   switch (date) {
     case 1: bot.purge(); console.log("Purge run on " + today); break;
-    case 28: break;
     default: console.log("Scheduler run on " + today); break;
   }
 }

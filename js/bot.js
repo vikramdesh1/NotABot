@@ -6,7 +6,6 @@ var jsonfile = require('jsonfile');
 var utilities = require('./utilities.js');
 var Client = require('node-rest-client').Client;
 
-
 var botID = process.env.BOT_ID;
 var accessToken = process.env.ACCESS_TOKEN;
 var notAMeetupId = process.env.NOTAMEETUP_ID;
@@ -90,11 +89,6 @@ function purge() {
   setTimeout(purgeAndConfirm, 10000);
 }
 
-function sendPurgeWarning() {
-  //warn group members that the purge is coming
-  console.log("purgeWarning");
-}
-
 function sendMessageStats(numberOfDays) {
   //send message stats
   utilities.getMessageStats(numberOfDays, function(message) {
@@ -117,4 +111,3 @@ function purgeAndConfirm() {
 exports.respond = respond;
 exports.postMessage = postMessage;
 exports.purge = purge;
-exports.sendPurgeWarning = sendPurgeWarning;
