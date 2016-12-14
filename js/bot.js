@@ -45,7 +45,7 @@ function respond() {
       sendMessageStats(-1);
     } else if(botRegex6.test(request.text)) {
       utilities.getMessages(-1, 0, function(messages) {
-        var index = getRandomInt(0, messages.length - 1);
+        var index = utilities.getRandomInt(0, messages.length - 1);
         var message = messages[index];
         var timestamp = new Date(message.created_at * 1000);
         var text = message.name + " (" + timestamp.getMonth() + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
@@ -114,12 +114,6 @@ function purgeAndConfirm() {
   utilities.purge(function(message) {
     postMessage(message);
   });
-}
-
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 exports.respond = respond;
