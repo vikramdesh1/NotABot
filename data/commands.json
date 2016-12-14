@@ -1,7 +1,7 @@
 {
   "$commands" : "Lists all available commands for Not A Bot",
   "$coolasciiface" : "Gets a random ASCII emoji",
-  "$insult" : "Get a random insult from www.insultgenerator.org",
+  "$insult" : "Gets a random insult from www.insultgenerator.org",
   "$messagestats" : "Gets a list of group members along with the number of messages they have sent since the group started",
   "$messagestats n" : "Gets a list of group members along with the number of messages they have sent in the past n days"
 }
