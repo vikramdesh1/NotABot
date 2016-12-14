@@ -1,3 +1,3 @@
 # The Not A Bot GroupMe bot
 
-Description will go here... some day.
+A bot for a GroupMe group. More details to come...
