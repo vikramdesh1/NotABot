@@ -176,4 +176,5 @@ function purge(whenDone) {
 exports.formatJSONForBot = formatJSONForBot;
 exports.getMembers = getMembers;
 exports.getMessageStats = getMessageStats;
+exports.getMessages = getMessages;
 exports.purge = purge;
