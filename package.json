@@ -1,5 +1,5 @@
 {
-  "name": "Not A Bot",
+  "name": "notabot",
   "version": "0.9.0",
   "description": "A bot for a GroupMe group",
   "main": "index.js",
