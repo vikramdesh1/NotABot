@@ -49,7 +49,8 @@ function respond() {
         var message = messages[index];
         var timestamp = new Date(message.created_at * 1000);
         var text = message.name + " (" + timestamp.getMonth() + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
-        postMessage(text);
+        var attachments = message.attachments;
+        postMessage(text, attachments);
       });
     } else {
       //do nothing
@@ -75,7 +76,7 @@ function postMessage(message, attachments) {
     "bot_id" : botID,
     "text" : botResponse
   };
-  if(attachments.length > 0) {
+  if(attachments != undefined && attachments.length > 0) {
     body.attachments = attachments;
   }
   console.log('Sending ' + botResponse + ' to ' + botID);
