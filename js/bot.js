@@ -46,12 +46,7 @@ function respond() {
         }
       }
     } else if(botRegex5.test(request.text)) {
-      utilities.getMessages(-1, 0, function(messages) {
-        var index = utilities.getRandomInt(0, messages.length - 1);
-        var message = messages[index];
-        var timestamp = new Date(message.created_at * 1000);
-        var text = "Message #" + (index + 1) + " - \n" + message.name + " (" + (timestamp.getMonth() + 1) + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
-        var attachments = message.attachments;
+      getRandomMessage(function(text, attachments) {
         postMessage(text, attachments);
       });
     } else if(botRegex6.test(request.text)) {
@@ -125,6 +120,17 @@ function purgeAndConfirm() {
   //purge and confirm
   utilities.purge(function(message) {
     postMessage(message);
+  });
+}
+
+function getRandomMessage(whenDone) {
+  utilities.getMessages(-1, 0, function(messages) {
+    var index = utilities.getRandomInt(0, messages.length - 1);
+    var message = messages[index];
+    var timestamp = new Date(message.created_at * 1000);
+    var text = "Message #" + (index + 1) + " - \n" + message.name + " (" + (timestamp.getMonth() + 1) + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
+    var attachments = message.attachments;
+    whenDone(text, attachments);
   });
 }
 
