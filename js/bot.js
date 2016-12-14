@@ -50,7 +50,7 @@ function respond() {
         var index = getRandomInt(0, messages.length - 1);
         var message = messages[index];
         var timestamp = new Date(message.created_at * 1000);
-        var text = message.name + " (" + timestamp.getMonth() + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
+        var text = "Message #" + (index + 1) + " - \n" + message.name + " (" + (timestamp.getMonth() + 1) + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
         postMessage(text);
       });
     } else if(botRegex6.test(request.text)) {
