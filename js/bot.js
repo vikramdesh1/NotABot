@@ -58,10 +58,14 @@ function respond() {
   }
 }
 
-function postMessage(message) {
+function postMessage(message, attachments) {
   //sending message to bot
   var botResponse, options, body, botReq;
-  botResponse = message;
+  if(message != null) {
+    botResponse = message;
+  } else {
+    botResponse = "";
+  }
   options = {
     hostname: 'api.groupme.com',
     path: '/v3/bots/post',
@@ -71,6 +75,9 @@ function postMessage(message) {
     "bot_id" : botID,
     "text" : botResponse
   };
+  if(attachments.length > 0) {
+    body.attachments = attachments;
+  }
   console.log('Sending ' + botResponse + ' to ' + botID);
   botReq = HTTPS.request(options, function(res) {
     if(res.statusCode == 202) {
