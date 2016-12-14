@@ -5,7 +5,7 @@ var bot = require("./bot.js");
 
 function formatJSONForBot(input) {
   //making JSON readable
-  return input.replace(/,/g, "\n").replace("{", "").replace("}", "").replace(/:/g, " : ");
+  return input.replace(/,/g, "\n").replace("{", "").replace("}", "").replace(/:/g, " : ").replace(/\"/g, "");
 }
 
 function getMembers(whenDone) {
@@ -148,7 +148,7 @@ function purge(whenDone) {
     if(toBeKicked.length > 0) {
       message += "The following members are being removed for inactivity - \n";
       for(var i=0; i<toBeKicked.length; i++) {
-        message += "\"" + toBeKicked[i].nickname + "\"";
+        message += toBeKicked[i].nickname;
         if(i != toBeKicked.length - 1) {
           message += "\n";
         }

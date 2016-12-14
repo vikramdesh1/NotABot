@@ -44,9 +44,9 @@ function respond() {
     } else if(botRegex5.test(request.text)) {
       sendMessageStats(-1);
     } else if(botRegex6.test(request.text)) {
-      utilities.getMessages(-1, 0, function(messages) {
-
-      });
+      var file = './data/commands.json';
+      var data = jsonfile.readFileSync(file);
+      console.log(utilities.formatJSONForBot(JSON.stringify(data)));
     } else {
       //do nothing
     }
@@ -97,9 +97,9 @@ function sendMessageStats(numberOfDays) {
   //send message stats
   utilities.getMessageStats(numberOfDays, function(message) {
     if(numberOfDays != -1) {
-      postMessage("These are the message counts for every member of this group for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
+      postMessage("These are the message counts for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
     } else if(numberOfDays == -1) {
-      postMessage("These are the message counts for every member of this group for its lifetime - \n" + utilities.formatJSONForBot(message));
+      postMessage("These are the message counts for the group's lifetime - \n" + utilities.formatJSONForBot(message));
 
     }
   });

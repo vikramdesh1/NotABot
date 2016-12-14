@@ -3,5 +3,5 @@
   "$coolasciiface" : "Gets a random ASCII emoji",
   "$insult" : "Gets a random insult from www.insultgenerator.org",
   "$messagestats" : "Gets a list of group members along with the number of messages they have sent since the group started",
-  "$messagestats n" : "Gets a list of group members along with the number of messages they have sent in the past n days"
+  "$messagestats <n>" : "Gets a list of group members along with the number of messages they have sent in the past n days"
 }
