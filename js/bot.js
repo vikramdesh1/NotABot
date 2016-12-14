@@ -18,7 +18,7 @@ function respond() {
   botRegex3 = /\$commands/;
   botRegex4 = /\$messagestats (\d+)/;
   botRegex5 = /\$messagestats/;
-  botRegex6 = /\$test/;
+  botRegex6 = /\$randommessage/;
 
   if((request.sender_type != "bot" && request.sender_type != "system") && request.text) {
     this.res.writeHead(200);
@@ -44,9 +44,13 @@ function respond() {
     } else if(botRegex5.test(request.text)) {
       sendMessageStats(-1);
     } else if(botRegex6.test(request.text)) {
-      var file = './data/commands.json';
-      var data = jsonfile.readFileSync(file);
-      console.log(utilities.formatJSONForBot(JSON.stringify(data)));
+      utilities.getMessages(-1, 0, function(messages) {
+        var index = getRandomInt(0, messages.length - 1);
+        var message = messages[index];
+        var timestamp = new Date(message.created_at * 1000);
+        var text = message.name + " (" + timestamp.getMonth() + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
+        postMessage(text);
+      });
     } else {
       //do nothing
     }
@@ -110,6 +114,12 @@ function purgeAndConfirm() {
   utilities.purge(function(message) {
     postMessage(message);
   });
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 exports.respond = respond;
