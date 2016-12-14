@@ -16,9 +16,9 @@ function respond() {
   botRegex1 = /\$coolasciiface/;
   botRegex2 = /\$insult/;
   botRegex3 = /\$commands/;
-  botRegex4 = /\$messagestats (\d+)/;
-  botRegex5 = /\$messagestats/;
-  botRegex6 = /\$randommessage/;
+  botRegex4 = /\$messagestats ?(\d+)?/;
+  botRegex5 = /\$randommessage/;
+  botRegex6 = /\$test/;
 
   if((request.sender_type != "bot" && request.sender_type != "system") && request.text) {
     this.res.writeHead(200);
@@ -35,15 +35,17 @@ function respond() {
       postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
     } else if(botRegex4.test(request.text)) {
       var numberOfDays = botRegex4.exec(request.text)[1];
-      if(numberOfDays != undefined && numberOfDays > 0) {
-        sendMessageStats(numberOfDays);
-      }
-      else {
-        postMessage("The number of days for fetching message stats is invalid");
+      if(numberOfDays == undefined) {
+        sendMessageStats(-1); 
+      } else {
+        if(numberOfDays > 0) {
+          sendMessageStats(numberOfDays);
+        }
+        else {
+          postMessage("The number of days for fetching message stats is invalid");
+        }
       }
     } else if(botRegex5.test(request.text)) {
-      sendMessageStats(-1);
-    } else if(botRegex6.test(request.text)) {
       utilities.getMessages(-1, 0, function(messages) {
         var index = getRandomInt(0, messages.length - 1);
         var message = messages[index];
@@ -51,6 +53,8 @@ function respond() {
         var text = message.name + " (" + timestamp.getMonth() + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
         postMessage(text);
       });
+    } else if(botRegex6.test(request.text)) {
+      //test code
     } else {
       //do nothing
     }
