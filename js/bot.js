@@ -59,9 +59,6 @@ function respond() {
       }
     } else if(botRegex6.test(request.text)) {
       //test code
-      utilities.getMembers(function(members) {
-        console.log(members);
-      });
     } else {
       //do nothing
     }
@@ -138,17 +135,8 @@ function getRandomMessage(userName, whenDone) {
   if(userName != null) {
     utilities.getMessages(-1, 0, function(allMessages) {
       var messages = [];
-      var memberId;
-      utilities.getMembers(function(members) {
-        members.forEach(function(member) {
-          if(member.nickname == message.name) {
-            memberId = member.user_id;
-          }
-        });
-      });
-
       allMessages.forEach(function(message) {
-        if(message.user_id == memberId) {
+        if(message.name == userName) {
           messages.push(message);
         }
       });
