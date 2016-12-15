@@ -17,7 +17,7 @@ function respond() {
   botRegex2 = /\$insult/;
   botRegex3 = /\$commands/;
   botRegex4 = /\$messagestats ?(\d+)?/;
-  botRegex5 = /\$randommessage/;
+  botRegex5 = /\$randommessage ?([\s\S]+)?/;
   botRegex6 = /\$test/;
 
   if((request.sender_type != "bot" && request.sender_type != "system") && request.text) {
@@ -46,9 +46,17 @@ function respond() {
         }
       }
     } else if(botRegex5.test(request.text)) {
-      getRandomMessage(function(text, attachments) {
-        postMessage(text, attachments);
-      });
+      var userName = botRegex5.exec(request.text)[1];
+      if(userName == undefined) {
+        getRandomMessage(null, function(text, attachments) {
+          postMessage(text, attachments);
+        });
+      }
+      else {
+        getRandomMessage(userName, function(text, attachments) {
+          postMessage(text, attachments);
+        });
+      }
     } else if(botRegex6.test(request.text)) {
       //test code
     } else {
@@ -123,15 +131,38 @@ function purgeAndConfirm() {
   });
 }
 
-function getRandomMessage(whenDone) {
-  utilities.getMessages(-1, 0, function(messages) {
-    var index = utilities.getRandomInt(0, messages.length - 1);
-    var message = messages[index];
-    var timestamp = new Date(message.created_at * 1000);
-    var text = "Message #" + (index + 1) + " - \n" + message.name + " (" + (timestamp.getMonth() + 1) + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
-    var attachments = message.attachments;
-    whenDone(text, attachments);
-  });
+function getRandomMessage(userName, whenDone) {
+  if(userName != null) {
+    utilities.getMessages(-1, 0, function(allMessages) {
+      var messages = [];
+      allMessages.forEach(function(message) {
+        if(message.name == userName) {
+          messages.push(message);
+        }
+      });
+      if(messages.length != 0) {
+      var index = utilities.getRandomInt(0, messages.length - 1);
+      var message = messages[index];
+      var timestamp = new Date(message.created_at * 1000);
+      var text = "Message #" + (index + 1) + " - \n" + message.name + " (" + (timestamp.getMonth() + 1) + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
+      var attachments = message.attachments;
+      whenDone(text, attachments);
+    } else {
+      var text = "The member's name for fetching a random message is invalid";
+      var attachments = [];
+      whenDone(text, attachments);
+    }
+    });
+  } else {
+    utilities.getMessages(-1, 0, function(messages) {
+      var index = utilities.getRandomInt(0, messages.length - 1);
+      var message = messages[index];
+      var timestamp = new Date(message.created_at * 1000);
+      var text = "Message #" + (index + 1) + " - \n" + message.name + " (" + (timestamp.getMonth() + 1) + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
+      var attachments = message.attachments;
+      whenDone(text, attachments);
+    });
+  }
 }
 
 exports.respond = respond;
