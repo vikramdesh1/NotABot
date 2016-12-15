@@ -49,14 +49,12 @@ function respond() {
       var userName = botRegex5.exec(request.text)[1];
       if(userName == undefined) {
         getRandomMessage(null, function(text, attachments) {
-          //postMessage(text, attachments);
-          console.log(text);
+          postMessage(text, attachments);
         });
       }
       else {
         getRandomMessage(userName, function(text, attachments) {
-          //postMessage(text, attachments);
-          console.log(text);
+          postMessage(text, attachments);
         });
       }
     } else if(botRegex6.test(request.text)) {
