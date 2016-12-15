@@ -144,7 +144,12 @@ function getRandomMessage(userName, whenDone) {
       var index = utilities.getRandomInt(0, messages.length - 1);
       var message = messages[index];
       var timestamp = new Date(message.created_at * 1000);
-      var text = "Message #" + (index + 1) + " - \n" + message.name + " (" + (timestamp.getMonth() + 1) + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
+      var text = "Message #" + (index + 1) + " - \n" + message.name + " (" + (timestamp.getMonth() + 1) + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : ";
+      if(message.text == null) {
+        text += "(no message)";
+      } else {
+        text += message.text;
+      }
       var attachments = message.attachments;
       whenDone(text, attachments);
     } else {
