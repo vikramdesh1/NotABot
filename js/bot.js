@@ -59,9 +59,7 @@ function respond() {
       }
     } else if(botRegex6.test(request.text)) {
       //test code
-      utilities.getMembers(function(members) {
-        console.log(members);
-      });
+      utilities.dumpMessages();
     } else {
       //do nothing
     }

@@ -2,6 +2,8 @@ var Client = require("node-rest-client").Client;
 var accessToken = process.env.ACCESS_TOKEN;
 var notAMeetupId = process.env.NOTAMEETUP_ID;
 var bot = require("./bot.js");
+var jsonfile = require('jsonfile');
+
 
 function formatJSONForBot(input) {
   //making JSON readable
@@ -180,9 +182,17 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function dumpMessages() {
+  getMessages(-1, 0, function(messages) {
+    var file = './data/messages.json';
+    jsonfile.writeFileSync(file, messages);
+  });
+}
+
 exports.formatJSONForBot = formatJSONForBot;
 exports.getMembers = getMembers;
 exports.getMessageStats = getMessageStats;
 exports.getMessages = getMessages;
 exports.getRandomInt = getRandomInt;
+exports.dumpMessages = dumpMessages;
 exports.purge = purge;

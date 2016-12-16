@@ -1,3 +1,4 @@
 .env
 npm-debug.log
 .DS_Store
+/data/messages.json
