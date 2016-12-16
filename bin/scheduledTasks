@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 
 var bot = require('../js/bot.js');
-var utilities = require('../js/utilities.js');
 
 function runScheduledTask() {
   var today = new Date();
   var  date = today.getDate();
   switch (date) {
     case 1: bot.purge(); console.log("Purge run on " + today); break;
-    default: utilities.dumpMessages();
-    console.log("Messages dumped on " + today); break;
+    default: console.log("Scheduler run on " + today); break;
   }
 }
 

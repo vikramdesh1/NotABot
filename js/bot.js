@@ -58,9 +58,7 @@ function respond() {
         });
       }
     } else if(botRegex6.test(request.text)) {
-      var file = './data/messages.json';
-      var data = jsonfile.readFileSync(file);
-      console.log(data);
+      
     } else {
       //do nothing
     }
