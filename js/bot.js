@@ -35,14 +35,15 @@ function respond() {
       postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
     } else if(botRegex4.test(request.text)) {
       var numberOfDays = botRegex4.exec(request.text)[1];
-      if(numberOfDays == undefined) {
+      var input = botRegex4.exec(request.text)[3];
+      if(numberOfDays == undefined && input.trim() == "$messagestats") {
         sendMessageStats(-1);
       } else {
         if(numberOfDays > 0) {
           sendMessageStats(numberOfDays);
         }
         else {
-          postMessage("The number of days for fetching message stats is invalid");
+          postMessage("Number of days is invalid");
         }
       }
     } else if(botRegex5.test(request.text)) {
@@ -58,7 +59,11 @@ function respond() {
         });
       }
     } else if(botRegex6.test(request.text)) {
-
+        var file = './data/messages.json';
+        utilities.getMessages(-1, 0, function(messages) {
+          jsonfile.writeFileSync(file, messages);
+          console.log(messages.length);
+        });
     } else {
       //do nothing
     }
@@ -116,9 +121,9 @@ function sendMessageStats(numberOfDays) {
   //send message stats
   utilities.getMessageStats(numberOfDays, function(message) {
     if(numberOfDays != -1) {
-      postMessage("These are the message counts for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
+      postMessage("Message counts for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
     } else if(numberOfDays == -1) {
-      postMessage("These are the message counts for the group's lifetime - \n" + utilities.formatJSONForBot(message));
+      postMessage("Message counts for the group's lifetime - \n" + utilities.formatJSONForBot(message));
 
     }
   });
@@ -160,7 +165,7 @@ function getRandomMessage(userName, whenDone) {
           var attachments = message.attachments;
           whenDone(text, attachments);
         } else {
-          var text = "The member's name for fetching a random message is invalid";
+          var text = "Name is invalid";
           var attachments = [];
           whenDone(text, attachments);
         }
