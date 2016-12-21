@@ -17,7 +17,7 @@ function respond() {
   botRegex1 = /\$coolasciiface/;
   botRegex2 = /\$insult/;
   botRegex3 = /\$commands/;
-  botRegex4 = /\$messagestats ?(\d+)?/;
+  botRegex4 = /\$messagestats ?(\d+)/;
   botRegex5 = /\$randommessage ?([\s\S]+)?/;
   botRegex6 = /\$test/;
 
@@ -36,8 +36,7 @@ function respond() {
       postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
     } else if(botRegex4.test(request.text)) {
       var numberOfDays = botRegex4.exec(request.text)[1];
-      var input = botRegex4.exec(request.text)[0];
-      if(numberOfDays == undefined && input.trim() == "$messagestats") {
+      if(numberOfDays == undefined) {
         sendMessageStats(-1);
       } else {
         if(numberOfDays > 0) {
