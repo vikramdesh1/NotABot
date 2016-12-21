@@ -17,7 +17,7 @@ function respond() {
   botRegex1 = /\$coolasciiface/;
   botRegex2 = /\$insult/;
   botRegex3 = /\$commands/;
-  botRegex4 = /\$messagestats ?(\d+)/;
+  botRegex4 = /\$messagestats ?(\d+)?/;
   botRegex5 = /\$randommessage ?([\s\S]+)?/;
   botRegex6 = /\$test/;
 
