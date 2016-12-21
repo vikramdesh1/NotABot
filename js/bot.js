@@ -1,11 +1,11 @@
+require('dotenv').config();
+
 var HTTPS = require('https');
 var cool = require('cool-ascii-faces');
 var insultgenerator = require('insultgenerator');
 var jsonfile = require('jsonfile');
 var utilities = require('./utilities.js');
 var Client = require('node-rest-client').Client;
-
-require('dotenv').config();
 
 var botID = process.env.BOT_ID;
 var accessToken = process.env.ACCESS_TOKEN;
