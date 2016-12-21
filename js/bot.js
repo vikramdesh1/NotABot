@@ -36,7 +36,8 @@ function respond() {
       postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
     } else if(botRegex4.test(request.text)) {
       var numberOfDays = botRegex4.exec(request.text)[1];
-      if(numberOfDays == undefined) {
+      var input = botRegex4.exec(request.text)[0];
+      if(numberOfDays == undefined && input.trim() == "$messagestats") {
         sendMessageStats(-1);
       } else {
         if(numberOfDays > 0) {
