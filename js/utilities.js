@@ -285,7 +285,8 @@ function getSimulatedMessage(userName, whenDone) {
               options.minScorePerWord = 3;
             }
             const result = markov.generateSentenceSync(options);
-            message += "Simulated message for " + member.nickname + " - \n" + result.string;
+            console.log(result);
+            message += "Simulated message for " + member.nickname + " (" + result.refs.length + " messages used to generate this) - \n" + result.string;
           }
           whenDone(message);
         }
