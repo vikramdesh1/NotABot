@@ -197,7 +197,7 @@ function getRandomMessage(userName, whenDone) {
       var memberId;
       getMembers(function(members) {
         members.forEach(function(member) {
-          if(member.nickname.toLowerCase() == userName.toLowerCase()) {
+          if(member.nickname.toLowerCase() == userName.trim().toLowerCase()) {
             memberId = member.user_id;
           }
         });
@@ -249,7 +249,7 @@ function getSimulatedMessage(userName, whenDone) {
         }
         else {
           members.forEach(function(tempMember) {
-            if(tempMember.nickname.toLowerCase() == userName.toLowerCase()) {
+            if(tempMember.nickname.toLowerCase() == userName.trim().toLowerCase()) {
               member = tempMember;
             }
           });

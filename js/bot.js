@@ -18,9 +18,9 @@ function respond() {
   insultRegex = /\$insult/;
   commandsRegex = /\$commands/;
   messagestatsRegex = /\$messagestats ?(\d+)?/;
-  randommessageRegex = /\$randommessage ?(\S+)?/;
+  randommessageRegex = /\$randommessage ?([\s\S]+)?/;
   raiseyourdongersRegex = /\$raiseyourdongers ?(\d+)?/;
-  simulatemessageRegex = /\$simulatemessage ?(\S+)?/;
+  simulatemessageRegex = /\$simulatemessage ?([\s\S]+)?/;
   testRegex = /\$test/;
 
   if((request.sender_type != "bot" && request.sender_type != "system") && request.text) {
