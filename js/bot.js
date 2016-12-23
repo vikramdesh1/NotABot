@@ -14,28 +14,29 @@ var notAMeetupId = process.env.NOTAMEETUP_ID;
 function respond() {
   //comparing incoming message to regexes to determine what action to take
   var request = JSON.parse(this.req.chunks[0]),
-  botRegex1 = /\$coolasciiface/;
-  botRegex2 = /\$insult/;
-  botRegex3 = /\$commands/;
-  botRegex4 = /\$messagestats ?(\d+)?/;
-  botRegex5 = /\$randommessage ?([\s\S]+)?/;
-  botRegex6 = /\$test/;
+  coolasciifaceRegex = /\$coolasciiface/;
+  insultRegex = /\$insult/;
+  commandsRegex = /\$commands/;
+  messagestatsRegex = /\$messagestats ?(\d+)?/;
+  randommessageRegex = /\$randommessage ?([\s\S]+)?/;
+  raiseyourdongersRegex = /\$raiseyourdongers ?(\d+)?/;
+  testRegex = /\$test/;
 
   if((request.sender_type != "bot" && request.sender_type != "system") && request.text) {
     this.res.writeHead(200);
-    if(botRegex1.test(request.text)) {
+    if(coolasciifaceRegex.test(request.text)) {
       postMessage(cool());
-    } else if(botRegex2.test(request.text)) {
+    } else if(insultRegex.test(request.text)) {
       insultgenerator(function(insult)
       {
         postMessage(insult);
       });
-    } else if(botRegex3.test(request.text)) {
+    } else if(commandsRegex.test(request.text)) {
       var file = './data/commands.json';
       var data = jsonfile.readFileSync(file);
       postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
-    } else if(botRegex4.test(request.text)) {
-      var numberOfDays = botRegex4.exec(request.text)[1];
+    } else if(messagestatsRegex.test(request.text)) {
+      var numberOfDays = messagestatsRegex.exec(request.text)[1];
       if(numberOfDays == undefined) {
         sendMessageStats(-1);
       } else {
@@ -46,8 +47,8 @@ function respond() {
           postMessage("Number of days is invalid");
         }
       }
-    } else if(botRegex5.test(request.text)) {
-      var userName = botRegex5.exec(request.text)[1];
+    } else if(randommessageRegex.test(request.text)) {
+      var userName = randommessageRegex.exec(request.text)[1];
       if(userName == undefined) {
         getRandomMessage(null, function(text, attachments) {
           postMessage(text, attachments);
@@ -58,7 +59,19 @@ function respond() {
           postMessage(text, attachments);
         });
       }
-    } else if(botRegex6.test(request.text)) {
+    } else if(raiseyourdongersRegex.test(request.text)) {
+        var count = raiseyourdongersRegex.exec(request.text)[1];
+        if(count == undefined || count <= 0) {
+          postMessage("ヽ༼ຈل͜ຈ༽ﾉ");
+        }
+        else if(count > 0) {
+          var message = "";
+          for(var i=0; i<count; i++) {
+            message += "ヽ༼ຈل͜ຈ༽ﾉ ";
+          }
+          postMessage(message);
+        }
+    } else if(testRegex.test(request.text)) {
         var file = './data/messages.json';
         utilities.getMessages(-1, 0, function(messages) {
           jsonfile.writeFileSync(file, messages);
