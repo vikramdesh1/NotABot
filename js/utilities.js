@@ -254,39 +254,41 @@ function getSimulatedMessage(userName, whenDone) {
             }
           });
         }
-        tempMessages.forEach(function(tempMessage) {
-          if(tempMessage.user_id == member.user_id && tempMessage.text != null) {
-            messages.push(tempMessage.text);
+        if(member != undefined) {
+          tempMessages.forEach(function(tempMessage) {
+            if(tempMessage.user_id == member.user_id && tempMessage.text != null) {
+              messages.push(tempMessage.text);
+            }
+          });
+          var message = "";
+          if(messages.length <= 100) {
+            message += "Not enough data to simulate message for " + member.nickname;
           }
-        });
-        var message = "";
-        if(messages.length <= 100) {
-          message += "Not enough data to simulate message for " + member.nickname;
-        }
-        else if(messages.length > 100){
-          const markov = new Markov(messages);
-          markov.buildCorpusSync();
-          var options = {};
-          if(messages.length > 100 && messages.length <= 200) {
-            options.minScore = 1;
-            options.minScorePerWord = 0;
-          } else if(messages.length > 200 && messages.length <= 400) {
-            options.minScore = 3;
-            options.minScorePerWord = 0;
-          } else if(messages.length > 400 && messages.length <= 600) {
-            options.minScore = 8;
-            options.minScorePerWord = 1;
-          } else if(messages.length > 600 && messages.length <= 800) {
-            options.minScore = 13;
-            options.minScorePerWord = 2;
-          } else if(messages.length > 800) {
-            options.minScore = 18;
-            options.minScorePerWord = 3;
+          else if(messages.length > 100){
+            const markov = new Markov(messages);
+            markov.buildCorpusSync();
+            var options = {};
+            if(messages.length > 100 && messages.length <= 200) {
+              options.minScore = 1;
+              options.minScorePerWord = 0;
+            } else if(messages.length > 200 && messages.length <= 400) {
+              options.minScore = 3;
+              options.minScorePerWord = 0;
+            } else if(messages.length > 400 && messages.length <= 600) {
+              options.minScore = 8;
+              options.minScorePerWord = 1;
+            } else if(messages.length > 600 && messages.length <= 800) {
+              options.minScore = 13;
+              options.minScorePerWord = 2;
+            } else if(messages.length > 800) {
+              options.minScore = 18;
+              options.minScorePerWord = 3;
+            }
+            const result = markov.generateSentenceSync(options);
+            message += "Simulated message for " + member.nickname + " - \n" + result.string;
           }
-          const result = markov.generateSentenceSync(options);
-          message += "Simulated message for " + member.nickname + " - \n" + result.string;
+          whenDone(message);
         }
-        whenDone(message);
       });
     });
   } catch (err) {
