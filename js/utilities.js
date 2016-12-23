@@ -197,7 +197,7 @@ function getRandomMessage(userName, whenDone) {
       var memberId;
       getMembers(function(members) {
         members.forEach(function(member) {
-          if(member.nickname == userName) {
+          if(member.nickname.toLowerCase() == userName.toLowerCase()) {
             memberId = member.user_id;
           }
         });
@@ -249,7 +249,7 @@ function getSimulatedMessage(userName, whenDone) {
         }
         else {
           members.forEach(function(tempMember) {
-            if(tempMember.nickname == userName) {
+            if(tempMember.nickname.toLowerCase() == userName.toLowerCase()) {
               member = tempMember;
             }
           });
@@ -260,10 +260,10 @@ function getSimulatedMessage(userName, whenDone) {
           }
         });
         var message = "";
-        if(messages.length < 100) {
-          message += "Not enough data to build model to build model for " + member.nickname;
+        if(messages.length <= 100) {
+          message += "Not enough data to simulate message for " + member.nickname;
         }
-        else {
+        else if(messages.length > 100){
           const markov = new Markov(messages);
           markov.buildCorpusSync();
           var options = {};
@@ -285,8 +285,8 @@ function getSimulatedMessage(userName, whenDone) {
           }
           const result = markov.generateSentenceSync(options);
           message += "Simulated message for " + member.nickname + " - \n" + result.string;
-          whenDone(message);
         }
+        whenDone(message);
       });
     });
   } catch (err) {
