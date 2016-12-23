@@ -20,6 +20,7 @@ function respond() {
   messagestatsRegex = /\$messagestats ?(\d+)?/;
   randommessageRegex = /\$randommessage ?([\s\S]+)?/;
   raiseyourdongersRegex = /\$raiseyourdongers ?(\d+)?/;
+  simulatemessageRegex = /\$simulatemessage ?([\s\S]+)?/;
   testRegex = /\$test/;
 
   if((request.sender_type != "bot" && request.sender_type != "system") && request.text) {
@@ -50,33 +51,45 @@ function respond() {
     } else if(randommessageRegex.test(request.text)) {
       var userName = randommessageRegex.exec(request.text)[1];
       if(userName == undefined) {
-        getRandomMessage(null, function(text, attachments) {
+        utilities.getRandomMessage(null, function(text, attachments) {
           postMessage(text, attachments);
         });
       }
       else {
-        getRandomMessage(userName, function(text, attachments) {
+        utilities.getRandomMessage(userName, function(text, attachments) {
           postMessage(text, attachments);
         });
       }
     } else if(raiseyourdongersRegex.test(request.text)) {
-        var count = raiseyourdongersRegex.exec(request.text)[1];
-        if(count == undefined || count <= 0) {
-          postMessage("ヽ༼ຈل͜ຈ༽ﾉ");
+      var count = raiseyourdongersRegex.exec(request.text)[1];
+      if(count == undefined || count <= 0) {
+        postMessage("ヽ༼ຈل͜ຈ༽ﾉ");
+      }
+      else if(count > 0) {
+        var message = "";
+        for(var i=0; i<count; i++) {
+          message += "ヽ༼ຈل͜ຈ༽ﾉ ";
         }
-        else if(count > 0) {
-          var message = "";
-          for(var i=0; i<count; i++) {
-            message += "ヽ༼ຈل͜ຈ༽ﾉ ";
-          }
+        postMessage(message);
+      }
+    } else if(simulatemessageRegex.test(request.text)) {
+      var userName = simulatemessageRegex.exec(request.text)[1];
+      if(userName == undefined) {
+        utilities.getSimulatedMessage(null, function(message) {
           postMessage(message);
-        }
-    } else if(testRegex.test(request.text)) {
-        var file = './data/messages.json';
-        utilities.getMessages(-1, 0, function(messages) {
-          jsonfile.writeFileSync(file, messages);
-          console.log(messages.length);
         });
+      }
+      else {
+        utilities.getSimulatedMessage(userName, function(message) {
+          postMessage(message);
+        });
+      }
+    } else if(testRegex.test(request.text)) {
+      var file = './data/messages.json';
+      utilities.getMessages(-1, 0, function(messages) {
+        jsonfile.writeFileSync(file, messages);
+        console.log(messages.length);
+      });
     } else {
       //do nothing
     }
@@ -147,53 +160,6 @@ function purgeAndConfirm() {
   utilities.purge(function(message) {
     postMessage(message);
   });
-}
-
-function getRandomMessage(userName, whenDone) {
-  if(userName != null) {
-    utilities.getMessages(-1, 0, function(allMessages) {
-      var messages = [];
-      var memberId;
-      utilities.getMembers(function(members) {
-        members.forEach(function(member) {
-          if(member.nickname == userName) {
-            memberId = member.user_id;
-          }
-        });
-        allMessages.forEach(function(message) {
-          if(message.user_id == memberId) {
-            messages.push(message);
-          }
-        });
-        if(messages.length != 0) {
-          var index = utilities.getRandomInt(0, messages.length - 1);
-          var message = messages[index];
-          var timestamp = new Date(message.created_at * 1000);
-          var text = "Message #" + (messages.length - index) + "/" + messages.length + " - \n" + message.name + " (" + (timestamp.getMonth() + 1) + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : ";
-          if(message.text == null) {
-            text += "(no message)";
-          } else {
-            text += message.text;
-          }
-          var attachments = message.attachments;
-          whenDone(text, attachments);
-        } else {
-          var text = "Name is invalid";
-          var attachments = [];
-          whenDone(text, attachments);
-        }
-      });
-    });
-  } else {
-    utilities.getMessages(-1, 0, function(messages) {
-      var index = utilities.getRandomInt(0, messages.length - 1);
-      var message = messages[index];
-      var timestamp = new Date(message.created_at * 1000);
-      var text = "Message #" + (messages.length - index) + "/" + messages.length + " - \n" + message.name + " (" + (timestamp.getMonth() + 1) + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
-      var attachments = message.attachments;
-      whenDone(text, attachments);
-    });
-  }
 }
 
 exports.respond = respond;

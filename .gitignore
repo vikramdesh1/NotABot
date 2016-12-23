@@ -2,3 +2,5 @@
 npm-debug.log
 .DS_Store
 /data/messages.json
+node_modules
+public

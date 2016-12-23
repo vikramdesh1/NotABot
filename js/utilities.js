@@ -1,6 +1,7 @@
 var Client = require("node-rest-client").Client;
 var bot = require("./bot.js");
 var jsonfile = require('jsonfile');
+const Markov = require('markov-strings');
 
 var accessToken = process.env.ACCESS_TOKEN;
 var notAMeetupId = process.env.NOTAMEETUP_ID;
@@ -189,10 +190,116 @@ function dumpMessages() {
   });
 }
 
+function getRandomMessage(userName, whenDone) {
+  if(userName != null) {
+    getMessages(-1, 0, function(allMessages) {
+      var messages = [];
+      var memberId;
+      getMembers(function(members) {
+        members.forEach(function(member) {
+          if(member.nickname == userName) {
+            memberId = member.user_id;
+          }
+        });
+        allMessages.forEach(function(message) {
+          if(message.user_id == memberId) {
+            messages.push(message);
+          }
+        });
+        if(messages.length != 0) {
+          var index = utilities.getRandomInt(0, messages.length - 1);
+          var message = messages[index];
+          var timestamp = new Date(message.created_at * 1000);
+          var text = "Message #" + (messages.length - index) + "/" + messages.length + " - \n" + message.name + " (" + (timestamp.getMonth() + 1) + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : ";
+          if(message.text == null) {
+            text += "(no message)";
+          } else {
+            text += message.text;
+          }
+          var attachments = message.attachments;
+          whenDone(text, attachments);
+        } else {
+          var text = "Name is invalid";
+          var attachments = [];
+          whenDone(text, attachments);
+        }
+      });
+    });
+  } else {
+    getMessages(-1, 0, function(messages) {
+      var index = utilities.getRandomInt(0, messages.length - 1);
+      var message = messages[index];
+      var timestamp = new Date(message.created_at * 1000);
+      var text = "Message #" + (messages.length - index) + "/" + messages.length + " - \n" + message.name + " (" + (timestamp.getMonth() + 1) + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
+      var attachments = message.attachments;
+      whenDone(text, attachments);
+    });
+  }
+}
+
+
+function getSimulatedMessage(userName, whenDone) {
+  try {
+    getMembers(function(members) {
+      getMessages(-1, 0, function(tempMessages) {
+        var member;
+        var messages = [];
+        if(userName == null) {
+          member = members[getRandomInt(0, members.length - 1)];
+        }
+        else {
+          members.forEach(function(tempMember) {
+            if(tempMember.nickname == userName) {
+              member = tempMember;
+            }
+          });
+        }
+        tempMessages.forEach(function(tempMessage) {
+          if(tempMessage.user_id == member.user_id && tempMessage.text != null) {
+            messages.push(tempMessage.text);
+          }
+        });
+        var message = "";
+        if(messages.length < 100) {
+          message += "Not enough data to build model to build model for " + member.nickname;
+        }
+        else {
+          const markov = new Markov(messages);
+          markov.buildCorpusSync();
+          var options = {};
+          if(messages.length > 100 && messages.length <= 200) {
+            options.minScore = 1;
+            options.minScorePerWord = 0;
+          } else if(messages.length > 200 && messages.length <= 400) {
+            options.minScore = 3;
+            options.minScorePerWord = 0;
+          } else if(messages.length > 400 && messages.length <= 600) {
+            options.minScore = 8;
+            options.minScorePerWord = 1;
+          } else if(messages.length > 600 && messages.length <= 800) {
+            options.minScore = 13;
+            options.minScorePerWord = 2;
+          } else if(messages.length > 800) {
+            options.minScore = 18;
+            options.minScorePerWord = 3;
+          }
+          const result = markov.generateSentenceSync(options);
+          message += "Simulated message for " + member.nickname + " - \n" + result.string;
+          whenDone(message);
+        }
+      });
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 exports.formatJSONForBot = formatJSONForBot;
 exports.getMembers = getMembers;
 exports.getMessageStats = getMessageStats;
 exports.getMessages = getMessages;
 exports.getRandomInt = getRandomInt;
 exports.dumpMessages = dumpMessages;
+exports.getRandomMessage = getRandomMessage;
+exports.getSimulatedMessage = getSimulatedMessage;
 exports.purge = purge;
