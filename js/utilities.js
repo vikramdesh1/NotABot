@@ -237,7 +237,6 @@ function getRandomMessage(userName, whenDone) {
   }
 }
 
-
 function getSimulatedMessage(userName, whenDone) {
   try {
     getMembers(function(members) {
