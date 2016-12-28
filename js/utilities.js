@@ -207,7 +207,7 @@ function getRandomMessage(userName, whenDone) {
           }
         });
         if(messages.length != 0) {
-          var index = utilities.getRandomInt(0, messages.length - 1);
+          var index = getRandomInt(0, messages.length - 1);
           var message = messages[index];
           var timestamp = new Date(message.created_at * 1000);
           var text = "Message #" + (messages.length - index) + "/" + messages.length + " - \n" + message.name + " (" + (timestamp.getMonth() + 1) + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : ";
@@ -227,7 +227,7 @@ function getRandomMessage(userName, whenDone) {
     });
   } else {
     getMessages(-1, 0, function(messages) {
-      var index = utilities.getRandomInt(0, messages.length - 1);
+      var index = getRandomInt(0, messages.length - 1);
       var message = messages[index];
       var timestamp = new Date(message.created_at * 1000);
       var text = "Message #" + (messages.length - index) + "/" + messages.length + " - \n" + message.name + " (" + (timestamp.getMonth() + 1) + "/" + timestamp.getDate() + "/" + timestamp.getFullYear() + ") : " + message.text;
