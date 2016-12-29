@@ -296,6 +296,51 @@ function getSimulatedMessage(userName, whenDone) {
   }
 }
 
+function getLikeStats(numberOfDays, whenDone) {
+  //return sorted list of members with number of messages they've sent in the last n days
+  var members;
+  getMembers(function(output) {
+    members = output;
+    members.forEach(function(member) {
+      member["score"] = 0;
+    });
+    getMessages(numberOfDays, 0, function(messages) {
+      members.forEach(function(member) {
+        messages.forEach(function(message) {
+          if(message.favorited_by.includes(member.user_id)) {
+            member.score++;
+          }
+        });
+      });
+      //sorting list in descending order of number of messages (yeah, yeah bubble sort i know)
+      var n = members.length;
+      while(n != 0) {
+        var newN = 0;
+        for(var i=1; i<members.length; i++) {
+          if(members[i-1].score < members[i].score) {
+            var temp = members[i-1];
+            members[i-1] = members[i];
+            members[i] = temp;
+            newN = i;
+          }
+        }
+        n = newN;
+      }
+      //constructing object from array
+      var stats = "{";
+      for(var i=0; i<members.length; i++) {
+        stats += "\"" + members[i].nickname + "\":\"" + members[i].score + "\"";
+        if(i != members.length - 1) {
+          stats += ",";
+        }
+      }
+      stats += "}";
+      whenDone(stats, members);
+    });
+  });
+
+}
+
 exports.formatJSONForBot = formatJSONForBot;
 exports.getMembers = getMembers;
 exports.getMessageStats = getMessageStats;
@@ -304,4 +349,5 @@ exports.getRandomInt = getRandomInt;
 exports.dumpMessages = dumpMessages;
 exports.getRandomMessage = getRandomMessage;
 exports.getSimulatedMessage = getSimulatedMessage;
+exports.getLikeStats = getLikeStats;
 exports.purge = purge;
