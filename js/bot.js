@@ -21,6 +21,7 @@ function respond() {
   randommessageRegex = /\$randommessage ?([\s\S]+)?/;
   raiseyourdongersRegex = /\$raiseyourdongers ?(\d+)?/;
   simulatemessageRegex = /\$simulatemessage ?([\s\S]+)?/;
+  likestatsRegex = /\$likestats ?(\d+)?/;
   testRegex = /\$test/;
 
   if((request.sender_type != "bot" && request.sender_type != "system") && request.text) {
@@ -90,6 +91,18 @@ function respond() {
         jsonfile.writeFileSync(file, messages);
         console.log(messages.length);
       });
+    } else if(likestatsRegex.test(request.text)) {
+      var numberOfDays = likestatsRegex.exec(request.text)[1];
+      if(numberOfDays == undefined) {
+        sendLikeStats(-1);
+      } else {
+        if(numberOfDays > 0) {
+          sendLikeStats(numberOfDays);
+        }
+        else {
+          postMessage("Number of days is invalid");
+        }
+      }
     } else {
       //do nothing
     }
@@ -150,7 +163,17 @@ function sendMessageStats(numberOfDays) {
       postMessage("Message counts for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
     } else if(numberOfDays == -1) {
       postMessage("Message counts for the group's lifetime - \n" + utilities.formatJSONForBot(message));
+    }
+  });
+}
 
+function sendLikeStats(numberOfDays) {
+  //send message stats
+  utilities.getLikeStats(numberOfDays, function(message) {
+    if(numberOfDays != -1) {
+      postMessage("Like counts for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
+    } else if(numberOfDays == -1) {
+      postMessage("Like counts for the group's lifetime - \n" + utilities.formatJSONForBot(message));
     }
   });
 }
