@@ -167,11 +167,9 @@ function purge(whenDone) {
     };
     toBeKicked.forEach(function(member) {
       var url = "https://api.groupme.com/v3/groups/" + notAMeetupId + "/members/" + member.id + "/remove?token=" + accessToken;
-      toBeKicked.forEach(function(member) {
         client.post(url, args, function (data, response) {
           console.log("Removing " + member.nickname + " from group - " + data);
         });
-      });
     });
   });
 }
