@@ -236,7 +236,6 @@ function getRandomMessage(userName, whenDone) {
 }
 
 function getSimulatedMessage(userName, whenDone) {
-  try {
     getMembers(function(members) {
       getMessages(-1, 0, function(tempMessages) {
         var member;
@@ -289,9 +288,6 @@ function getSimulatedMessage(userName, whenDone) {
         }
       });
     });
-  } catch (err) {
-    console.log(err);
-  }
 }
 
 function getLikeStats(numberOfDays, whenDone) {
