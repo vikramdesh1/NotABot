@@ -4,3 +4,4 @@ npm-debug.log
 /data/messages.json
 node_modules
 public
+.vscode

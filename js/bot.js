@@ -23,90 +23,94 @@ function respond() {
   simulatemessageRegex = /\$simulatemessage ?([\s\S]+)?/;
   likestatsRegex = /\$likestats ?(\d+)?/;
   testRegex = /\$test/;
-
-  if((request.sender_type != "bot" && request.sender_type != "system") && request.text) {
-    this.res.writeHead(200);
-    if(coolasciifaceRegex.test(request.text)) {
-      postMessage(cool());
-    } else if(insultRegex.test(request.text)) {
-      insultgenerator(function(insult)
-      {
-        postMessage(insult);
-      });
-    } else if(commandsRegex.test(request.text)) {
-      var file = './data/commands.json';
-      var data = jsonfile.readFileSync(file);
-      postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
-    } else if(messagestatsRegex.test(request.text)) {
-      var numberOfDays = messagestatsRegex.exec(request.text)[1];
-      if(numberOfDays == undefined) {
-        sendMessageStats(-1);
-      } else {
-        if(numberOfDays > 0) {
-          sendMessageStats(numberOfDays);
+  try {
+    if((request.sender_type != "bot" && request.sender_type != "system") && request.text) {
+      this.res.writeHead(200);
+      if(coolasciifaceRegex.test(request.text)) {
+        postMessage(cool());
+      } else if(insultRegex.test(request.text)) {
+        insultgenerator(function(insult)
+        {
+          postMessage(insult);
+        });
+      } else if(commandsRegex.test(request.text)) {
+        var file = './data/commands.json';
+        var data = jsonfile.readFileSync(file);
+        postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
+      } else if(messagestatsRegex.test(request.text)) {
+        var numberOfDays = messagestatsRegex.exec(request.text)[1];
+        if(numberOfDays == undefined) {
+          sendMessageStats(-1);
+        } else {
+          if(numberOfDays > 0) {
+            sendMessageStats(numberOfDays);
+          }
+          else {
+            postMessage("Number of days is invalid");
+          }
+        }
+      } else if(randommessageRegex.test(request.text)) {
+        var userName = randommessageRegex.exec(request.text)[1];
+        if(userName == undefined) {
+          utilities.getRandomMessage(null, function(text, attachments) {
+            postMessage(text, attachments);
+          });
         }
         else {
-          postMessage("Number of days is invalid");
+          utilities.getRandomMessage(userName, function(text, attachments) {
+            postMessage(text, attachments);
+          });
         }
-      }
-    } else if(randommessageRegex.test(request.text)) {
-      var userName = randommessageRegex.exec(request.text)[1];
-      if(userName == undefined) {
-        utilities.getRandomMessage(null, function(text, attachments) {
-          postMessage(text, attachments);
-        });
-      }
-      else {
-        utilities.getRandomMessage(userName, function(text, attachments) {
-          postMessage(text, attachments);
-        });
-      }
-    } else if(raiseyourdongersRegex.test(request.text)) {
-      var count = raiseyourdongersRegex.exec(request.text)[1];
-      if(count == undefined || count <= 0) {
-        postMessage("ヽ༼ຈل͜ຈ༽ﾉ");
-      }
-      else if(count > 0) {
-        var message = "";
-        for(var i=0; i<count; i++) {
-          message += "ヽ༼ຈل͜ຈ༽ﾉ ";
+      } else if(raiseyourdongersRegex.test(request.text)) {
+        var count = raiseyourdongersRegex.exec(request.text)[1];
+        if(count == undefined || count <= 0) {
+          postMessage("ヽ༼ຈل͜ຈ༽ﾉ");
         }
-        postMessage(message);
-      }
-    } else if(simulatemessageRegex.test(request.text)) {
-      var userName = simulatemessageRegex.exec(request.text)[1];
-      if(userName == undefined) {
-        utilities.getSimulatedMessage(null, function(message) {
+        else if(count > 0) {
+          var message = "";
+          for(var i=0; i<count; i++) {
+            message += "ヽ༼ຈل͜ຈ༽ﾉ ";
+          }
           postMessage(message);
-        });
-      }
-      else {
-        utilities.getSimulatedMessage(userName, function(message) {
-          postMessage(message);
-        });
-      }
-    } else if(testRegex.test(request.text)) {
-      var file = './data/messages.json';
-      utilities.getMessages(-1, 0, function(messages) {
-        jsonfile.writeFileSync(file, messages);
-        console.log(messages.length);
-      });
-    } else if(likestatsRegex.test(request.text)) {
-      var numberOfDays = likestatsRegex.exec(request.text)[1];
-      if(numberOfDays == undefined) {
-        sendLikeStats(-1);
-      } else {
-        if(numberOfDays > 0) {
-          sendLikeStats(numberOfDays);
+        }
+      } else if(simulatemessageRegex.test(request.text)) {
+        var userName = simulatemessageRegex.exec(request.text)[1];
+        if(userName == undefined) {
+          utilities.getSimulatedMessage(null, function(message) {
+            postMessage(message);
+          });
         }
         else {
-          postMessage("Number of days is invalid");
+          utilities.getSimulatedMessage(userName, function(message) {
+            postMessage(message);
+          });
         }
+      } else if(testRegex.test(request.text)) {
+        var file = './data/messages.json';
+        utilities.getMessages(-1, 0, function(messages) {
+          jsonfile.writeFileSync(file, messages);
+          console.log(messages.length);
+        });
+      } else if(likestatsRegex.test(request.text)) {
+        var numberOfDays = likestatsRegex.exec(request.text)[1];
+        if(numberOfDays == undefined) {
+          sendLikeStats(-1);
+        } else {
+          if(numberOfDays > 0) {
+            sendLikeStats(numberOfDays);
+          }
+          else {
+            postMessage("Number of days is invalid");
+          }
+        }
+      } else {
+        //do nothing
       }
-    } else {
-      //do nothing
+      this.res.end();  
     }
-    this.res.end();
+  } catch(err) {
+    postMessage("Beep boop. Something went wrong. Tell Vikram to check the logs.")
+    console.log(err);
   }
 }
 
