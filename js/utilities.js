@@ -63,7 +63,7 @@ function getMessageStats(numberOfDays, whenDone) {
       }
       //constructing object from array
       var stats = "{";
-      stats += "\"" + "Total messages" + "\":\"" + total + "\"";
+      stats += "\"" + "Total messages" + "\":\"" + total + "\",";
       for(var i=0; i<members.length; i++) {
         stats += "\"" + members[i].nickname + "\":\"" + members[i].score + "\"";
         if(i != members.length - 1) {
