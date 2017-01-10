@@ -303,16 +303,19 @@ function getSimulatedMessage(userName, whenDone) {
 function getLikeStats(numberOfDays, whenDone) {
   //return sorted list of members with number of messages they've sent in the last n days
   var members;
+  var total;
   getMembers(function(output) {
     members = output;
     members.forEach(function(member) {
       member["score"] = 0;
     });
+    total = 0;
     getMessages(numberOfDays, 0, function(messages) {
       members.forEach(function(member) {
         messages.forEach(function(message) {
           if(message.favorited_by.includes(member.user_id)) {
             member.score++;
+            total++;
           }
         });
       });
@@ -332,6 +335,7 @@ function getLikeStats(numberOfDays, whenDone) {
       }
       //constructing object from array
       var stats = "{";
+      stats += "\"" + "Total likes" + "\":\"" + total + "\",";
       for(var i=0; i<members.length; i++) {
         stats += "\"" + members[i].nickname + "\":\"" + members[i].score + "\"";
         if(i != members.length - 1) {
