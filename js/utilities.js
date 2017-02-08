@@ -295,6 +295,8 @@ function getSimulatedMessage(userName, whenDone) {
             message += member.nickname + " (simulated using " + result.refs.length + " messages) - \n" + result.string;
           }
           whenDone(message);
+        } else {
+          whenDone("Name is invalid");
         }
       });
     });
