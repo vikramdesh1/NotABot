@@ -2,7 +2,6 @@ require('dotenv').config();
 
 var HTTPS = require('https');
 var cool = require('cool-ascii-faces');
-var insultgenerator = require('insultgenerator');
 var jsonfile = require('jsonfile');
 var utilities = require('./utilities.js');
 var Client = require('node-rest-client').Client;
@@ -15,7 +14,6 @@ function respond() {
   //comparing incoming message to regexes to determine what action to take
   var request = JSON.parse(this.req.chunks[0]),
   coolasciifaceRegex = /\$coolasciiface/;
-  insultRegex = /\$insult/;
   commandsRegex = /\$commands/;
   messagestatsRegex = /\$messagestats ?(\d+)?/;
   randommessageRegex = /\$randommessage ?([\s\S]+)?/;
@@ -29,11 +27,6 @@ function respond() {
       this.res.writeHead(200);
       if(coolasciifaceRegex.test(request.text)) {
         postMessage(cool());
-      } else if(insultRegex.test(request.text)) {
-        insultgenerator(function(insult)
-        {
-          postMessage(insult);
-        });
       } else if(commandsRegex.test(request.text)) {
         postMessage("Currently supported commands are here - \n" + "https://github.com/vikramdesh1/NotABot/blob/master/commands.md");
       } else if(messagestatsRegex.test(request.text)) {
