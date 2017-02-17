@@ -302,7 +302,7 @@ function getSimulatedMessage(userName, whenDone) {
     });
 }
 
-function getLikeStats(numberOfDays, whenDone) {
+function getLikesGivenStats(numberOfDays, whenDone) {
   //return sorted list of members with number of messages they've sent in the last n days
   var members;
   var total;
@@ -337,7 +337,56 @@ function getLikeStats(numberOfDays, whenDone) {
       }
       //constructing object from array
       var stats = "{";
-      stats += "\"" + "Total likes" + "\":\"" + total + "\",";
+      stats += "\"" + "Total likes given" + "\":\"" + total + "\",";
+      for(var i=0; i<members.length; i++) {
+        stats += "\"" + members[i].nickname + "\":\"" + members[i].score + "\"";
+        if(i != members.length - 1) {
+          stats += ",";
+        }
+      }
+      stats += "}";
+      whenDone(stats, members);
+    });
+  });
+
+}
+
+function getLikesReceivedStats(numberOfDays, whenDone) {
+  //return sorted list of members with number of messages they've sent in the last n days
+  var members;
+  var total;
+  getMembers(function(output) {
+    members = output;
+    members.forEach(function(member) {
+      member["score"] = 0;
+    });
+    total = 0;
+    getMessages(numberOfDays, 0, function(messages) {
+      members.forEach(function(member) {
+        messages.forEach(function(message) {
+          if((message.favorited_by.length > 0) && (message.sender_id == member.user_id)) {
+            member.score += message.favorited_by.length;
+            total += message.favorited_by.length;
+          }
+        });
+      });
+      //sorting list in descending order of number of messages (yeah, yeah bubble sort i know)
+      var n = members.length;
+      while(n != 0) {
+        var newN = 0;
+        for(var i=1; i<members.length; i++) {
+          if(members[i-1].score < members[i].score) {
+            var temp = members[i-1];
+            members[i-1] = members[i];
+            members[i] = temp;
+            newN = i;
+          }
+        }
+        n = newN;
+      }
+      //constructing object from array
+      var stats = "{";
+      stats += "\"" + "Total likes received" + "\":\"" + total + "\",";
       for(var i=0; i<members.length; i++) {
         stats += "\"" + members[i].nickname + "\":\"" + members[i].score + "\"";
         if(i != members.length - 1) {
@@ -359,5 +408,6 @@ exports.getRandomInt = getRandomInt;
 exports.dumpMessages = dumpMessages;
 exports.getRandomMessage = getRandomMessage;
 exports.getSimulatedMessage = getSimulatedMessage;
-exports.getLikeStats = getLikeStats;
+exports.getLikesGivenStats = getLikesGivenStats;
+exports.getLikesReceivedStats = getLikesReceivedStats;
 exports.purge = purge;
