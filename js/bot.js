@@ -35,9 +35,7 @@ function respond() {
           postMessage(insult);
         });
       } else if(commandsRegex.test(request.text)) {
-        var file = './data/commands.json';
-        var data = jsonfile.readFileSync(file);
-        postMessage("These are my currently supported commands - \n" + utilities.formatJSONForBot(JSON.stringify(data)));
+        postMessage("Currently supported commands are here - \n" + "https://github.com/vikramdesh1/NotABot/blob/master/commands.md");
       } else if(messagestatsRegex.test(request.text)) {
         var numberOfDays = messagestatsRegex.exec(request.text)[1];
         if(numberOfDays == undefined) {
