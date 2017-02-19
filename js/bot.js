@@ -21,6 +21,7 @@ function respond() {
   simulatemessageRegex = /\$simulatemessage ?([\s\S]+)?/;
   likesgivenstatsRegex = /\$likesgivenstats ?(\d+)?/;
   likesreceivedstatsRegex = /\$likesreceivedstats ?(\d+)?/;
+  dumpmessagesRegex = /\$dumpmessages/;
   testRegex = /\$test/;
   try {
     if((request.sender_type != "bot" && request.sender_type != "system") && request.text) {
@@ -77,7 +78,7 @@ function respond() {
             postMessage(message);
           });
         }
-      } else if(testRegex.test(request.text)) {
+      } else if(dumpmessagesRegex.test(request.text)) {
         var file = './data/messages.json';
         utilities.getMessages(-1, 0, function(messages) {
           jsonfile.writeFileSync(file, messages);
