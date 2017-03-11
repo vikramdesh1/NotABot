@@ -2,6 +2,7 @@ var Client = require("node-rest-client").Client;
 var bot = require("./bot.js");
 var jsonfile = require('jsonfile');
 const Markov = require('markov-strings');
+var AWS = require('aws-sdk');
 
 var accessToken = process.env.ACCESS_TOKEN;
 var notAMeetupId = process.env.NOTAMEETUP_ID;
@@ -77,7 +78,7 @@ function getMessageStats(numberOfDays, whenDone) {
 
 }
 
-var globalMessages = [];
+var allMessages = [];
 var lastLoop = 0;
 function getMessages(numberOfDays, before_id, whenDone) {
   //get all messages from the group posted within the last ~n days
@@ -88,7 +89,7 @@ function getMessages(numberOfDays, before_id, whenDone) {
     url += "&before_id=" + before_id;
   }
   else {
-    globalMessages = [];
+    allMessages = [];
   }
   //using -1 as flag indicating that the entire message history needs to be fetched
   if(numberOfDays != -1) {
@@ -98,21 +99,21 @@ function getMessages(numberOfDays, before_id, whenDone) {
         //multiplying timestamp by 1000 because groupme has timestamps in seconds instead of milliseconds
         //subtracting one hour from nDaysAgo because of some twisted logic, but hey it works
         if(((message.created_at * 1000) > (nDaysAgo - 3600000))) {
-          globalMessages.push(message);
+          allMessages.push(message);
         }
       });
-      var lastMessage = globalMessages[globalMessages.length - 1];
+      var lastMessage = allMessages[allMessages.length - 1];
       //some twisted logic again, smh
-      if(((lastMessage.created_at * 1000) > nDaysAgo) && (globalMessages.length % 100 == 0)) {
+      if(((lastMessage.created_at * 1000) > nDaysAgo) && (allMessages.length % 100 == 0)) {
         getMessages(numberOfDays, lastMessage.id, function(messages) {
-          whenDone(globalMessages);
+          whenDone(allMessages);
         });
         lastLoop = 0;
       } else {
         lastLoop = 1;
       }
       if(lastLoop == 1) {
-        whenDone(globalMessages);
+        whenDone(allMessages);
       }
     });
   } else if(numberOfDays == -1) {
@@ -122,21 +123,21 @@ function getMessages(numberOfDays, before_id, whenDone) {
         data.response.messages.forEach(function(message) {
           //multiplying timestamp by 1000 because groupme has timestamps in seconds instead of milliseconds
           //subtracting one hour from nDaysAgo because of some twisted logic, but hey it works
-          globalMessages.push(message);
+          allMessages.push(message);
         });
-        lastMessage = globalMessages[globalMessages.length - 1];
+        lastMessage = allMessages[allMessages.length - 1];
       }
       //some twisted logic again, smh
       if(lastMessage != null) {
         getMessages(-1, lastMessage.id, function(messages) {
-          whenDone(globalMessages);
+          whenDone(allMessages);
         });
         lastLoop = 0;
       } else {
         lastLoop = 1;
       }
       if(lastLoop == 1) {
-        whenDone(globalMessages);
+        whenDone(allMessages);
       }
     });
   }
