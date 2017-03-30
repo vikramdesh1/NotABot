@@ -104,10 +104,19 @@ function respond() {
           }
         }
       } else if(testRegex.test(request.text)) {
-          utilities.getAllMessages(function(messages) {
-            console.log(messages.length);
+        utilities.getMessages(-1, 0, function(messages) {
+          var s3 = new AWS.S3();
+          var uploadParams = {Bucket: 'notameetupmessagedump', Key: 'messagedump', Body: JSON.stringify(messages)};
+          s3.upload(uploadParams, function(err, data) {
+            if(err) {
+              console.log(err)
+            }
+            if(data) {
+              console.log(data);
+            }
           });
-      } else {
+        });
+      }else {
         //do nothing
       }
       this.res.end();  

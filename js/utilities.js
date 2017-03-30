@@ -117,78 +117,30 @@ function getMessages(numberOfDays, before_id, whenDone) {
       }
     });
   } else if(numberOfDays == -1) {
-    console.log(Date.now());
     var lastMessage = null;
-    var s3 = new AWS.S3();
-    var params = {Bucket: 'notameetupmessagedump', Key: 'messagedump'};
-    s3.getObject(params, function(err, data) {
-      if (err) {
-        console.log(err);
-      }
-      else {
-        console.log(data);
-
-        client.get(url, function(data, response){
-          if(data.response != undefined) {
-            data.response.messages.forEach(function(message) {
-              //multiplying timestamp by 1000 because groupme has timestamps in seconds instead of milliseconds
-              //subtracting one hour from nDaysAgo because of some twisted logic, but hey it works
-              allMessages.push(message);
-            });
-            lastMessage = allMessages[allMessages.length - 1];
-          }
-          //some twisted logic again, smh
-          if(lastMessage != null) {
-            getMessages(-1, lastMessage.id, function(messages) {
-              whenDone(allMessages);
-            });
-            lastLoop = 0;
-          } else {
-            lastLoop = 1;
-          }
-          if(lastLoop == 1) {
-            console.log(Date.now());
-            whenDone(allMessages);
-          }
+    client.get(url, function(data, response){
+      if(data.response != undefined) {
+        data.response.messages.forEach(function(message) {
+          //multiplying timestamp by 1000 because groupme has timestamps in seconds instead of milliseconds
+          //subtracting one hour from nDaysAgo because of some twisted logic, but hey it works
+          allMessages.push(message);
         });
-
+        lastMessage = allMessages[allMessages.length - 1];
+      }
+      //some twisted logic again, smh
+      if(lastMessage != null) {
+        getMessages(-1, lastMessage.id, function(messages) {
+          whenDone(allMessages);
+        });
+        lastLoop = 0;
+      } else {
+        lastLoop = 1;
+      }
+      if(lastLoop == 1) {
+        whenDone(allMessages);
       }
     });
-    
   }
-}
-
-function getAllMessages(whenDone) {
-  var client = new Client();
-  var url = "https://api.groupme.com/v3/groups/21970201/messages?token=IW46RJDNnIwqjIYv08JKP1D2vQXtJzewdmfbf8EF&limit=100";
-  var messages = [];
-  client.get(url, function(data, response) {
-    if(data.response != undefined) {
-      data.response.messages.forEach(function(message) {
-        messages.push(message);
-      });
-      var lastMessage = messages[messages.length - 1];
-      var flag = 0;
-      var count = 0;
-      while(flag == 0) {
-        console.log("loop");
-        var newClient = new Client();
-        var newUrl = url + "&before_id=" + lastMessage.id;
-        newClient.get(newUrl, function(data, response) {
-          if(data.response != undefined) {
-            data.response.messages.forEach(function(message) {
-              messages.push(message);
-            });
-            lastMessage = messages[messages.length - 1];
-            console.log(lastMessage);
-          } else {
-            flag = 1;
-          }
-        });
-      }
-    }
-    whenDone(messages);
-  });
 }
 
 function purge(whenDone) {
@@ -460,4 +412,3 @@ exports.getSimulatedMessage = getSimulatedMessage;
 exports.getLikesGivenStats = getLikesGivenStats;
 exports.getLikesReceivedStats = getLikesReceivedStats;
 exports.purge = purge;
-exports.getAllMessages = getAllMessages;
