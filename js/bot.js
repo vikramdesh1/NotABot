@@ -5,7 +5,6 @@ var cool = require('cool-ascii-faces');
 var jsonfile = require('jsonfile');
 var utilities = require('./utilities.js');
 var Client = require('node-rest-client').Client;
-var AWS = require('aws-sdk');
 
 var botID = process.env.BOT_ID;
 var accessToken = process.env.ACCESS_TOKEN;
@@ -79,6 +78,12 @@ function respond() {
             postMessage(message);
           });
         }
+      } else if(dumpmessagesRegex.test(request.text)) {
+        var file = './data/messages.json';
+        utilities.getMessages(-1, 0, function(messages) {
+          jsonfile.writeFileSync(file, messages);
+          console.log(messages.length);
+        });
       } else if(likesgivenstatsRegex.test(request.text)) {
         var numberOfDays = likesgivenstatsRegex.exec(request.text)[1];
         if(numberOfDays == undefined) {
@@ -103,20 +108,7 @@ function respond() {
             postMessage("Number of days is invalid");
           }
         }
-      } else if(testRegex.test(request.text)) {
-        utilities.getMessages(-1, 0, function(messages) {
-          var s3 = new AWS.S3();
-          var uploadParams = {Bucket: 'notameetupmessagedump', Key: 'messagedump', Body: JSON.stringify(messages)};
-          s3.upload(uploadParams, function(err, data) {
-            if(err) {
-              console.log(err)
-            }
-            if(data) {
-              console.log(data);
-            }
-          });
-        });
-      }else {
+      } else {
         //do nothing
       }
       this.res.end();  
