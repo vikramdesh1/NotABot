@@ -112,15 +112,16 @@ function respond() {
         //do nothing
       }
       this.res.end();  
-    } else if(request.sender_type == "system" && request.event.type == "membership.announce.added") {
-        var message = "Welcome to the group ";
-        request.event.data.added_users.forEach(function(member) {
-          message += member.nickname + ",";
-        });
-      message = message.substring(0, message.length - 1);
-      message += "!";
-      postMessage(message);
-      postMessaage("I am your friendly neighborhood (not a) bot. Reply with '$commands' to find out all the annoying stuff I can do!");
+    } else if(request.sender_type == "system") {// && request.event.type == "membership.announce.added") {
+        //var message = "Welcome to the group ";
+        //request.event.data.added_users.forEach(function(member) {
+        //  message += member.nickname + ",";
+        //});
+        //message = message.substring(0, message.length - 1);
+        //message += "!";
+        //postMessage(message);
+        //postMessaage("I am your friendly neighborhood (not a) bot. Reply with '$commands' to find out all the annoying stuff I can do!");
+      console.log(request);
       }
   } catch(err) {
     postMessage("Beep boop. Something went wrong. Tell Vikram to check the logs.")
