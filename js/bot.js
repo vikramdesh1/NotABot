@@ -113,7 +113,7 @@ function respond() {
       }
       this.res.end();  
     } else if(request.sender_type == "system" && request.text.includes("added")) {
-        postMessaage("Welcome to the group! I am your friendly neighborhood (not a) bot. Reply with '$commands' to find out all the annoying stuff I can do!");
+        postMessage("Welcome to the group! I am your friendly neighborhood (not a) bot. Reply with '$commands' to find out all the annoying stuff I can do!");
       console.log(request);
       }
   } catch(err) {
