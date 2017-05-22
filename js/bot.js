@@ -9,6 +9,7 @@ var Client = require('node-rest-client').Client;
 var botID = process.env.BOT_ID;
 var accessToken = process.env.ACCESS_TOKEN;
 var notAMeetupId = process.env.NOTAMEETUP_ID;
+var isLocal = false;
 
 function respond() {
   //comparing incoming message to regexes to determine what action to take
@@ -25,7 +26,7 @@ function respond() {
   testRegex = /\$test/;
   try {
     if((request.sender_type != "bot" && request.sender_type != "system") && request.text) {
-      var isLocal = this.req.headers.host.includes("127.0.0.1");
+      isLocal = this.req.headers.host.includes("127.0.0.1");
       this.res.writeHead(200);
       if(coolasciifaceRegex.test(request.text)) {
         postMessage(isLocal, cool());
@@ -127,7 +128,7 @@ function respond() {
 
 function postMessage(isLocal, message, attachments) {
   if(isLocal) {
-    console.log(message);
+    console.log(message + "\n");
   } else { 
     //sending message to bot
   var botResponse, options, body, botReq;
