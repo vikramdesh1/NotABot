@@ -108,6 +108,8 @@ function respond() {
             postMessage("Number of days is invalid");
           }
         }
+      } else if(testRegex.test(request.text)) {
+        console.log(request);
       } else {
         //do nothing
       }
