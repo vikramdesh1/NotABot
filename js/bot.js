@@ -25,11 +25,12 @@ function respond() {
   testRegex = /\$test/;
   try {
     if((request.sender_type != "bot" && request.sender_type != "system") && request.text) {
+      var isLocal = this.req.headers.host.includes("127.0.0.1");
       this.res.writeHead(200);
       if(coolasciifaceRegex.test(request.text)) {
-        postMessage(cool());
+        postMessage(isLocal, cool());
       } else if(commandsRegex.test(request.text)) {
-        postMessage("Currently supported commands are here - \n" + "https://github.com/vikramdesh1/NotABot/blob/master/commands.md");
+        postMessage(isLocal, "Currently supported commands are here - \n" + "https://github.com/vikramdesh1/NotABot/blob/master/commands.md");
       } else if(messagestatsRegex.test(request.text)) {
         var numberOfDays = messagestatsRegex.exec(request.text)[1];
         if(numberOfDays == undefined) {
@@ -39,43 +40,43 @@ function respond() {
             sendMessageStats(numberOfDays);
           }
           else {
-            postMessage("Number of days is invalid");
+            postMessage(isLocal, "Number of days is invalid");
           }
         }
       } else if(randommessageRegex.test(request.text)) {
         var userName = randommessageRegex.exec(request.text)[1];
         if(userName == undefined) {
           utilities.getRandomMessage(null, function(text, attachments) {
-            postMessage(text, attachments);
+            postMessage(isLocal, text, attachments);
           });
         }
         else {
           utilities.getRandomMessage(userName, function(text, attachments) {
-            postMessage(text, attachments);
+            postMessage(isLocal, text, attachments);
           });
         }
       } else if(raiseyourdongersRegex.test(request.text)) {
         var count = raiseyourdongersRegex.exec(request.text)[1];
         if(count == undefined || count <= 0) {
-          postMessage("ヽ༼ຈل͜ຈ༽ﾉ");
+          postMessage(isLocal, "ヽ༼ຈل͜ຈ༽ﾉ");
         }
         else if(count > 0) {
           var message = "";
           for(var i=0; i<count; i++) {
             message += "ヽ༼ຈل͜ຈ༽ﾉ ";
           }
-          postMessage(message);
+          postMessage(isLocal, message);
         }
       } else if(simulatemessageRegex.test(request.text)) {
         var userName = simulatemessageRegex.exec(request.text)[1];
         if(userName == undefined) {
           utilities.getSimulatedMessage(null, function(message) {
-            postMessage(message);
+            postMessage(isLocal, message);
           });
         }
         else {
           utilities.getSimulatedMessage(userName, function(message) {
-            postMessage(message);
+            postMessage(isLocal, message);
           });
         }
       } else if(dumpmessagesRegex.test(request.text)) {
@@ -93,7 +94,7 @@ function respond() {
             sendLikesGivenStats(numberOfDays);
           }
           else {
-            postMessage("Number of days is invalid");
+            postMessage(isLocal, "Number of days is invalid");
           }
         }
       } else if(likesreceivedstatsRegex.test(request.text)) {
@@ -105,27 +106,30 @@ function respond() {
             sendLikesReceivedStats(numberOfDays);
           }
           else {
-            postMessage("Number of days is invalid");
+            postMessage(isLocal, "Number of days is invalid");
           }
         }
       } else if(testRegex.test(request.text)) {
-        console.log(request);
+        console.log("test");
       } else {
         //do nothing
       }
       this.res.end();  
     } else if(request.sender_type == "system" && request.text.includes("added")) {
-        postMessage("Welcome to the group! I am your friendly neighborhood (not a) bot. Reply with '$commands' to find out all the annoying stuff I can do!");
+        postMessage(isLocal, "Welcome to the group! I am your friendly neighborhood (not a) bot. Reply with '$commands' to find out all the annoying stuff I can do!");
       console.log(request);
       }
   } catch(err) {
-    postMessage("Beep boop. Something went wrong. Tell Vikram to check the logs.")
+    postMessage(isLocal, "Beep boop. Something went wrong. Tell Vikram to check the logs.")
     console.log(err);
   }
 }
 
-function postMessage(message, attachments) {
-  //sending message to bot
+function postMessage(isLocal, message, attachments) {
+  if(isLocal) {
+    console.log(message);
+  } else { 
+    //sending message to bot
   var botResponse, options, body, botReq;
   if(message != null) {
     botResponse = message;
@@ -159,11 +163,12 @@ function postMessage(message, attachments) {
     console.log('Timeout posting message : '  + JSON.stringify(err));
   });
   botReq.end(JSON.stringify(body));
+  }
 }
 
 function purge() {
   //kick all members from the group who have had no activity for the past 30 days
-  postMessage("!!!THIS IS NOT A TEST!!! The monthly purge is about to commence. Hold on to your butts!");
+  postMessage(isLocal, "!!!THIS IS NOT A TEST!!! The monthly purge is about to commence. Hold on to your butts!");
   setTimeout(function() {
     sendMessageStats(30);
   }, 5000);
@@ -174,9 +179,9 @@ function sendMessageStats(numberOfDays) {
   //send message stats
   utilities.getMessageStats(numberOfDays, function(message) {
     if(numberOfDays != -1) {
-      postMessage("Message counts for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
+      postMessage(isLocal, "Message counts for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
     } else if(numberOfDays == -1) {
-      postMessage("Message counts for the group's lifetime - \n" + utilities.formatJSONForBot(message));
+      postMessage(isLocal, "Message counts for the group's lifetime - \n" + utilities.formatJSONForBot(message));
     }
   });
 }
@@ -185,9 +190,9 @@ function sendLikesGivenStats(numberOfDays) {
   //send message stats
   utilities.getLikesGivenStats(numberOfDays, function(message) {
     if(numberOfDays != -1) {
-      postMessage("Like counts for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
+      postMessage(isLocal, "Like counts for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
     } else if(numberOfDays == -1) {
-      postMessage("Like counts for the group's lifetime - \n" + utilities.formatJSONForBot(message));
+      postMessage(isLocal, "Like counts for the group's lifetime - \n" + utilities.formatJSONForBot(message));
     }
   });
 }
@@ -196,9 +201,9 @@ function sendLikesReceivedStats(numberOfDays) {
   //send message stats
   utilities.getLikesReceivedStats(numberOfDays, function(message) {
     if(numberOfDays != -1) {
-      postMessage("Like counts for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
+      postMessage(isLocal, "Like counts for the past " + numberOfDays + " days - \n" + utilities.formatJSONForBot(message));
     } else if(numberOfDays == -1) {
-      postMessage("Like counts for the group's lifetime - \n" + utilities.formatJSONForBot(message));
+      postMessage(isLocal, "Like counts for the group's lifetime - \n" + utilities.formatJSONForBot(message));
     }
   });
 }
@@ -206,7 +211,7 @@ function sendLikesReceivedStats(numberOfDays) {
 function purgeAndConfirm() {
   //purge and confirm
   utilities.purge(function(message) {
-    postMessage(message);
+    postMessage(isLocal, message);
   });
 }
 
