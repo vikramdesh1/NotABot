@@ -114,7 +114,10 @@ function respond() {
         //do nothing
       }
       this.res.end();  
-    }
+    } else if(request.sender_type == "system" && request.text.includes("added")) {
+        postMessage("Welcome to the group! I am your friendly neighborhood (not a) bot. Reply with '$commands' to find out all the annoying stuff I can do!");
+      console.log(request);
+      }
   } catch(err) {
     postMessage("Beep boop. Something went wrong. Tell Vikram to check the logs.")
     console.log(err);
