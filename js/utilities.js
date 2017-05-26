@@ -292,7 +292,7 @@ function getSimulatedMessage(userName, whenDone) {
             }
             const result = markov.generateSentenceSync(options);
             console.log(result);
-            message += member.nickname + " (simulated using " + result.refs.length + " messages) - \n" + result.string;
+            message += member.nickname + " - \n" + result.string;
           }
           whenDone(message);
         } else {
