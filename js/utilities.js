@@ -199,7 +199,7 @@ function getRandomMessage(userName, whenDone) {
       var memberId;
       getMembers(function(members) {
         members.forEach(function(member) {
-          if(member.nickname.toLowerCase() == userName.trim().toLowerCase()) {
+          if((member.nickname.toLowerCase() == userName.trim().toLowerCase()) || (member.nickname.toLowerCase().split(" ")[0] == userName.trim().toLowerCase().split(" ")[0])) {
             memberId = member.user_id;
           }
         });
@@ -249,9 +249,9 @@ function getSimulatedMessage(userName, whenDone) {
         }
         else {
           members.forEach(function(tempMember) {
-            if(tempMember.nickname.toLowerCase() == userName.trim().toLowerCase()) {
-              member = tempMember;
-            }
+            if((member.nickname.toLowerCase() == userName.trim().toLowerCase()) || (member.nickname.toLowerCase().split(" ")[0] == userName.trim().toLowerCase().split(" ")[0])) {
+            memberId = member.user_id;
+          }
           });
         }
         if(member != undefined) {
