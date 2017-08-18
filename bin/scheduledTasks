@@ -9,6 +9,11 @@ function runScheduledTask() {
     case 1: bot.purge(); console.log("Purge run on " + today); break;
     default: console.log("Scheduler run on " + today); break;
   }
+  var day = today.getDay();
+  switch (day) {
+    case 3: bot.postMessage("https://i.groupme.com/680x680.jpeg.f5b5310de377486f98496e23547cd373.large"); console.log("It is Wednesday my dudes");
+    default : console.log("It is not Wednesday my dudes");
+  }
 }
 
 runScheduledTask();
