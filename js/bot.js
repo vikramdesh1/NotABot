@@ -23,6 +23,7 @@ function respond() {
   likesgivenstatsRegex = /\$likesgivenstats ?(\d+)?/;
   likesreceivedstatsRegex = /\$likesreceivedstats ?(\d+)?/;
   dumpmessagesRegex = /\$dumpmessages/;
+  wikipediaRegex = /\$wikipedia ?([\s\S]+)?/;
   testRegex = /\$test/;
   try {
     if((request.sender_type != "bot" && request.sender_type != "system") && request.text) {
@@ -110,6 +111,9 @@ function respond() {
             postMessage(isLocal, "Number of days is invalid");
           }
         }
+      } else if(wikipediaRegex.test(request.text)) {
+          var searchTerm = wikipediaRegex.exec(request.text)[1];
+          console.log(searchTerm);
       } else if(testRegex.test(request.text)) {
         console.log("test");
       } else {
