@@ -400,6 +400,16 @@ function getLikesReceivedStats(numberOfDays, whenDone) {
 
 }
 
+function searchWikipedia(searchTerm, whenDone) {
+  var client = new Client();
+  var term = searchTerm.toLowerCase().replace(" ", "_");
+  var url = "https://en.wikipedia.org/api/rest_v1/page/summary/" + term;
+  client.get(url, function(data, response) {
+    console.log(response);
+    //whenDone(members);
+  });
+}
+
 exports.formatJSONForBot = formatJSONForBot;
 exports.getMembers = getMembers;
 exports.getMessageStats = getMessageStats;
