@@ -289,6 +289,15 @@ function getSimulatedMessage(userName, whenDone) {
             } else if(messages.length > 1200 && messages.length <= 1400) {
               options.minScore = 28;
               options.minScorePerWord = 5;
+            } else if(messages.length > 1400 && messages.length <= 1600) {
+              options.minScore = 33;
+              options.minScorePerWord = 6;
+            } else if(messages.length > 1600 && messages.length <= 1800) {
+              options.minScore = 38;
+              options.minScorePerWord = 7;
+            } else if(messages.length > 1800 && messages.length <= 2000) {
+              options.minScore = 43;
+              options.minScorePerWord = 8;
             }
             const result = markov.generateSentenceSync(options);
             console.log(result);
