@@ -11,6 +11,7 @@ function runScheduledTask() {
   }
   var day = today.getDay();
   switch (day) {
+    case 3: bot.postMessage(false, "Who's going to happy hour today?"); console.log("It is Wednesday my dudes"); break;
     default : console.log("It is not Wednesday my dudes");
   }
 }
